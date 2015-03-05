@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Copyright (c) 2013 bitstrings.org - Pino Silvaggio
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.bitstrings.maven.plugins.properties.its</groupId>
+    <artifactId>execution-simple</artifactId>
+    <version>1-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>@project.artifactId@</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>exec</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>operations</goal>
+                        </goals>
+                        <configuration>
+
+                            <operations>
+
+                                <define>
+                                    <fromPropertiesEntries>
+                                        <property>
+                                            <name>A1</name>
+                                            <value>V1</value>
+                                        </property>
+                                        <property>
+                                            <name>A2</name>
+                                            <value>V2</value>
+                                        </property>
+                                    </fromPropertiesEntries>
+                                    <fromPropertiesEntries>
+                                        a = b
+                                    </fromPropertiesEntries>
+                                    <fromPropertiesFile>
+                                        <file>@basedir@/src/it/resources/test.properties</file>
+                                        <transformers>
+                                            <forKeys>
+                                                <valueRemover>
+                                                    <valueSet>key1</valueSet>
+                                                </valueRemover>
+                                                <regExReplacer>
+                                                    <match>(.+)</match>
+                                                    <replacement>YY_$1</replacement>
+                                                </regExReplacer>
+                                            </forKeys>
+                                        </transformers>
+                                    </fromPropertiesFile>
+                                </define>
+                                <write>
+                                    <toMavenEnvironment/>
+                                    <toPropertiesFile>${project.build.directory}/test_${project.artifactId}.properties</toPropertiesFile>
+                                    <toPropertiesFile>${project.build.directory}/test_${project.artifactId}.xml</toPropertiesFile>
+                                    <toSystemOut/>
+                                    <toSystemOut>
+                                        <xmlFormat>true</xmlFormat>
+                                        <preText>------------------------[ START ]--</preText>
+                                        <postText>------------------------[ END ]--</postText>
+                                    </toSystemOut>
+                                </write>
+
+                            </operations>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>@maven.version@</version>
+        </dependency>
+    </dependencies>
+
+</project>
