@@ -24,8 +24,8 @@ Example - Port Use
 ```
 <configuration>
     <port>
-        <allocationRef>pool2</allocationRef>
-        <portName>wildfly</portName>
+        <allocationRef>pool1</allocationRef>
+        <portName>tomcat</portName>
     </port>
 </configuration>
 ```
