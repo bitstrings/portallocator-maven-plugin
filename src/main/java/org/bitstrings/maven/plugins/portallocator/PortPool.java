@@ -2,7 +2,7 @@ package org.bitstrings.maven.plugins.portallocator;
 
 import java.util.List;
 
-public class PortAllocation
+public class PortPool
 {
     public enum Strategy
     {

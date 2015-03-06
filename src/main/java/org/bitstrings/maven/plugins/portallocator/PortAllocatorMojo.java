@@ -11,7 +11,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-@Mojo( name = "operations", defaultPhase = VALIDATE, threadSafe = true )
+@Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresOnline = false )
 public class PortAllocatorMojo
     extends AbstractMojo
 {
@@ -25,7 +25,10 @@ public class PortAllocatorMojo
     private boolean verbose;
 
     @Parameter
-    private PortAllocations portAllocations;
+    private PortPools portPools;
+
+    @Parameter
+    private Ports ports;
 
     @Override
     public void execute()
