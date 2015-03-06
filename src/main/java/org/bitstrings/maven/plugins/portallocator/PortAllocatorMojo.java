@@ -1,4 +1,4 @@
-package org.bitstrings.maven.plugins.properties;
+package org.bitstrings.maven.plugins.portallocator;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
@@ -23,6 +23,9 @@ public class PortAllocatorMojo
 
     @Parameter( defaultValue = "false" )
     private boolean verbose;
+
+    @Parameter
+    private PortAllocations portAllocations;
 
     @Override
     public void execute()
