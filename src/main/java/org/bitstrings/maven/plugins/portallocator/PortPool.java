@@ -22,6 +22,16 @@ public class PortPool
         return name;
     }
 
+    public Strategy getStrategy()
+    {
+        return strategy;
+    }
+
+    public void setStrategy( String strategy )
+    {
+        this.strategy = Strategy.valueOf( strategy.toUpperCase() );
+    }
+
     public int getBasePort()
     {
         return basePort;
