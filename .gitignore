@@ -1,7 +1,7 @@
 *.class
-
 .settings
 .project
 .classpath
-target
 .*.md
+.factorypath
+target
