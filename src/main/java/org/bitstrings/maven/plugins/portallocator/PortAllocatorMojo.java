@@ -2,6 +2,9 @@ package org.bitstrings.maven.plugins.portallocator;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -25,10 +28,10 @@ public class PortAllocatorMojo
     private boolean verbose;
 
     @Parameter
-    private PortPools portPools;
+    private List<PortPool> portPools = new LinkedList<>();
 
     @Parameter
-    private Ports ports;
+    private List<Port> ports = new LinkedList<>();
 
     @Override
     public void execute()

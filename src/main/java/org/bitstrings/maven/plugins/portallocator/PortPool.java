@@ -1,6 +1,9 @@
 package org.bitstrings.maven.plugins.portallocator;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import com.google.common.base.Splitter;
 
 public class PortPool
 {
@@ -10,12 +13,30 @@ public class PortPool
         RANDOM;
     }
 
+    public static class Ports
+    {
+        private List<Integer> ports = new LinkedList<Integer>();
+
+        public void addPort( int port )
+        {
+            ports.add( port );
+        }
+
+        public void set( String csvPorts )
+        {
+            for ( String portStr : Splitter.on( ',' ).trimResults().omitEmptyStrings().split( csvPorts ) )
+            {
+                ports.add( Integer.parseInt( portStr ) );
+            }
+        }
+    }
+
     private String name;
     private Strategy strategy;
     private int basePort;
     private int minPort;
     private int maxPort;
-    private List<Integer> ports;
+    private Ports ports;
 
     public String getName()
     {
@@ -47,7 +68,7 @@ public class PortPool
         return maxPort;
     }
 
-    public List<Integer> getPorts()
+    public Ports getPorts()
     {
         return ports;
     }

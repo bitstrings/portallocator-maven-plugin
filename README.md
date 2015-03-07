@@ -13,17 +13,19 @@ Example - Port pools
             <goal>allocate</goal>
         </goals>
         <configuration>
-            <portPool>
-                <name>pool1</name>
-                <strategy>random</strategy>
-                <basePort>8080</basePort>
-                <minPort>8080</minPort>
-                <maxPort>8090</maxPort>
-            </portPool>
-            <portPool>
-                <name>pool2</name>
-                <ports>8080,8082,8085</ports>
-            </portPool>
+            <portPools>
+                <portPool>
+                    <name>pool1</name>
+                    <strategy>random</strategy>
+                    <basePort>8080</basePort>
+                    <minPort>8080</minPort>
+                    <maxPort>8090</maxPort>
+                </portPool>
+                <portPool>
+                    <name>pool2</name>
+                    <ports>8080,8082,8085</ports>
+                </portPool>
+            </portPools>
         </configuration>
     </execution>
 </executions>
@@ -33,18 +35,22 @@ Example - Port allocation
 -------------------------
 ```
 <configuration>
-    <port>
-        <poolRef>pool1</poolRef>
-        <portName>tomcat</portName>
-    </port>
+    <ports>
+        <port>
+            <poolRef>pool1</poolRef>
+            <portName>tomcat</portName>
+        </port>
+    </ports>
 </configuration>
 ```
 
 ```
 <configuration>
-    <port>
-        <portName>tomcat</portName>
-    </port>
+    <ports>
+        <port>
+            <portName>tomcat</portName>
+        </port>
+    </ports>
 </configuration>
 ```
 
@@ -52,10 +58,12 @@ Example - Port allocation with offset
 -------------------------------------
 ```
 <configuration>
-    <port>
-        <allocationRef>pool2</allocationRef>
-        <portName>wildfly</portName>
-        <setOffset/>
-    </port>
+    <ports>
+        <port>
+            <allocationRef>pool2</allocationRef>
+            <portName>wildfly</portName>
+            <setOffset/>
+        </port>
+    </ports>
 </configuration>
 ```
