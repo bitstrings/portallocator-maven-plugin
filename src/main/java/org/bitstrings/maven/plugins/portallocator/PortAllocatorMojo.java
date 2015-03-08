@@ -38,4 +38,10 @@ public class PortAllocatorMojo
         throws MojoExecutionException, MojoFailureException
     {
     }
+
+
+    public static void main( String[] args )
+        throws Exception
+    {
+    }
 }

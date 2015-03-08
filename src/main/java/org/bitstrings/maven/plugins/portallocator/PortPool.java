@@ -7,10 +7,64 @@ import com.google.common.base.Splitter;
 
 public class PortPool
 {
-    public enum Strategy
+    public static class PoolStrategy
     {
-        LINEAR,
-        RANDOM;
+        private List<String> usePools;
+
+        public void addUsePool( String id )
+        {
+            if ( usePools == null)
+            {
+                usePools = new LinkedList<>();
+            }
+
+            usePools.add( id );
+        }
+    }
+
+    public static class SelectionStrategy
+        extends PoolStrategy
+    {
+        public enum Type
+        {
+            ASCENDING,
+            DESCENDING,
+            RANDOM;
+        }
+
+        private Type type;
+
+        public Type getType()
+        {
+            return type;
+        }
+
+        public void set( String type )
+        {
+            this.type = Type.valueOf( type.toUpperCase() );
+        }
+    }
+
+    public static class DepletionStrategy
+        extends PoolStrategy
+    {
+        public enum Type
+        {
+            FAIL,
+            RANDOM;
+        }
+
+        private Type type;
+
+        public Type getType()
+        {
+            return type;
+        }
+
+        public void set( String type )
+        {
+            this.type = Type.valueOf( type.toUpperCase() );
+        }
     }
 
     public static class Ports
@@ -32,7 +86,8 @@ public class PortPool
     }
 
     private String name;
-    private Strategy strategy;
+    private SelectionStrategy selectionStrategy;
+    private DepletionStrategy depletionStrategy;
     private int basePort;
     private int minPort;
     private int maxPort;
@@ -43,14 +98,14 @@ public class PortPool
         return name;
     }
 
-    public Strategy getStrategy()
+    public SelectionStrategy getSelectionStrategy()
     {
-        return strategy;
+        return selectionStrategy;
     }
 
-    public void setStrategy( String strategy )
+    public DepletionStrategy getDepletionStrategy()
     {
-        this.strategy = Strategy.valueOf( strategy.toUpperCase() );
+        return depletionStrategy;
     }
 
     public int getBasePort()

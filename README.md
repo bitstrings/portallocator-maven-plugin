@@ -15,15 +15,24 @@ Example - Port pools
         <configuration>
             <portPools>
                 <portPool>
-                    <name>pool1</name>
-                    <strategy>random</strategy>
-                    <basePort>8080</basePort>
-                    <minPort>8080</minPort>
-                    <maxPort>8090</maxPort>
+                    <id>pool1</id>
+                    <selectionStrategy>ascendant</selectionStrategy>
+                    <ports>8080-</ports>
                 </portPool>
                 <portPool>
-                    <name>pool2</name>
+                    <id>pool2</id>
+                    <selectionStrategy>random|lowestFirst|highestFirst</selectionStrategy>
+                    <depletionStrategy>fail|random</depletionStrategy>
                     <ports>8080,8082,8085</ports>
+                </portPool>
+                <portPool>
+                    <id>pool3</id>
+                    <depletionStrategy>
+                        <usePool></usePool>
+                        <fail/>
+                        <random/>
+                    </depletionStrategy>
+                    <ports>9090-9099</ports>
                 </portPool>
             </portPools>
         </configuration>
@@ -38,7 +47,7 @@ Example - Port allocation
     <ports>
         <port>
             <poolRef>pool1</poolRef>
-            <portName>tomcat</portName>
+            <portName>tomcatPort</portName>
         </port>
     </ports>
 </configuration>
@@ -48,7 +57,7 @@ Example - Port allocation
 <configuration>
     <ports>
         <port>
-            <portName>tomcat</portName>
+            <portName>tomcatPort</portName>
         </port>
     </ports>
 </configuration>
@@ -61,8 +70,8 @@ Example - Port allocation with offset
     <ports>
         <port>
             <allocationRef>pool2</allocationRef>
-            <portName>wildfly</portName>
-            <setOffset/>
+            <portName>wildflyPort</portName>
+            <setOffsetProperty>true|false</setOffsetProperty>
         </port>
     </ports>
 </configuration>
