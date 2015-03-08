@@ -13,28 +13,24 @@ Example - Port pools
             <goal>allocate</goal>
         </goals>
         <configuration>
-            <portPools>
-                <portPool>
-                    <id>pool1</id>
-                    <selectionStrategy>ascendant</selectionStrategy>
-                    <ports>8080-</ports>
-                </portPool>
-                <portPool>
-                    <id>pool2</id>
-                    <selectionStrategy>random|lowestFirst|highestFirst</selectionStrategy>
-                    <depletionStrategy>fail|random</depletionStrategy>
-                    <ports>8080,8082,8085</ports>
-                </portPool>
-                <portPool>
-                    <id>pool3</id>
-                    <depletionStrategy>
-                        <usePool></usePool>
-                        <fail/>
-                        <random/>
-                    </depletionStrategy>
-                    <ports>9090-9099</ports>
-                </portPool>
-            </portPools>
+
+            <portAllocators>
+
+                <portAllocator>
+
+                    <id>allocator-1</id>
+
+                    <preferredPorts>8090</preferredPorts>
+
+                    <strategy>
+                        <order>ascending|descending|random</order>
+                        <depletionAction>continue|fail</depletionAction>
+                    </strategy>
+
+                </portAllocator>
+
+            </portAllocators>
+
         </configuration>
     </execution>
 </executions>

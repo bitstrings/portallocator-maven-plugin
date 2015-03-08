@@ -28,7 +28,7 @@ public class PortAllocatorMojo
     private boolean verbose;
 
     @Parameter
-    private List<PortPool> portPools = new LinkedList<>();
+    private List<PortAllocator> portPools = new LinkedList<>();
 
     @Parameter
     private List<Port> ports = new LinkedList<>();
