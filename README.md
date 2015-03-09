@@ -8,7 +8,7 @@ Example - Port allocators
 <artifactId>portallocator-maven-plugin</artifactId>
 <executions>
     <execution>
-        <id>allocators</id>
+        <id>selectors</id>
         <goals>
             <goal>allocate</goal>
         </goals>
@@ -18,7 +18,7 @@ Example - Port allocators
 
                 <portSelector>
 
-                    <id>allocator-1</id>
+                    <id>selector-1</id>
 
                     <preferredPorts>8090</preferredPorts>
 
@@ -42,7 +42,7 @@ Example - Port assignment
 <configuration>
     <ports>
         <port>
-            <allocatorRef>allocator-1</allocatorRef>
+            <allocatorRef>selector-1</allocatorRef>
             <name>tomcat</name>
             <portNameSuffix>port</portNameSuffix>
             <offsetNameSuffix>offset</offsetNameSuffix>
