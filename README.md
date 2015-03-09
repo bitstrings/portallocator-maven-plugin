@@ -1,8 +1,8 @@
 portallocator-maven-plugin
 ==========================
 
-Example - Port pools
---------------------
+Example - Port allocators
+-------------------------
 ```
 <groupId>org.bitstrings.maven.plugins</groupId>
 <artifactId>portallocator-maven-plugin</artifactId>
@@ -36,38 +36,16 @@ Example - Port pools
 </executions>
 ```
 
-Example - Port allocation
+Example - Port assignment
 -------------------------
 ```
 <configuration>
     <ports>
         <port>
-            <poolRef>pool1</poolRef>
-            <portName>tomcatPort</portName>
-        </port>
-    </ports>
-</configuration>
-```
-
-```
-<configuration>
-    <ports>
-        <port>
-            <portName>tomcatPort</portName>
-        </port>
-    </ports>
-</configuration>
-```
-
-Example - Port allocation with offset
--------------------------------------
-```
-<configuration>
-    <ports>
-        <port>
-            <allocationRef>pool2</allocationRef>
-            <portName>wildflyPort</portName>
-            <setOffsetProperty>true|false</setOffsetProperty>
+            <allocatorRef>allocator-1</allocatorRef>
+            <name>tomcat</name>
+            <portNameSuffix>port</portNameSuffix>
+            <offsetNameSuffix>offset</offsetNameSuffix>
         </port>
     </ports>
 </configuration>
