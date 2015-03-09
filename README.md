@@ -8,7 +8,7 @@ Example - Port allocators
 <artifactId>portallocator-maven-plugin</artifactId>
 <executions>
     <execution>
-        <id>pools</id>
+        <id>allocators</id>
         <goals>
             <goal>allocate</goal>
         </goals>
