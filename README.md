@@ -1,11 +1,11 @@
-portSelector-maven-plugin
+portallocator-maven-plugin
 ==========================
 
 Example - Port pools
 --------------------
 ```
 <groupId>org.bitstrings.maven.plugins</groupId>
-<artifactId>portSelector-maven-plugin</artifactId>
+<artifactId>portallocator-maven-plugin</artifactId>
 <executions>
     <execution>
         <id>pools</id>
