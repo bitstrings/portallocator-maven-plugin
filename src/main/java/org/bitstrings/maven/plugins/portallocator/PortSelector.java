@@ -5,30 +5,9 @@ import java.util.List;
 
 public class PortSelector
 {
-    public static class Strategy
+    public static enum DepletionAction
     {
-        public enum Order
-        {
-            ASCENDING, DESCENDING, RANDOM;
-        }
-
-        public enum DepletionAction
-        {
-            CONTINUE, FAIL;
-        }
-
-        private Order order;
-        private DepletionAction depletionAction;
-
-        public Order getOrder()
-        {
-            return order;
-        }
-
-        public DepletionAction getDepletionAction()
-        {
-            return depletionAction;
-        }
+        CONTINUE, FAIL;
     }
 
     public static class PreferredPorts
@@ -48,7 +27,7 @@ public class PortSelector
 
     private String id;
     private PreferredPorts preferredPorts;
-    private Strategy strategy;
+    private DepletionAction depletionAction;
 
     public String getId()
     {
@@ -60,8 +39,13 @@ public class PortSelector
         return preferredPorts;
     }
 
-    public Strategy getStrategy()
+    public DepletionAction getDepletionAction()
     {
-        return strategy;
+        return depletionAction;
+    }
+
+    public void setDepletionAction( String action )
+    {
+        depletionAction = DepletionAction.valueOf( action.toUpperCase() );
     }
 }

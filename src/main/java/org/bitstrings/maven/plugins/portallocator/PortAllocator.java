@@ -67,8 +67,6 @@ public class PortAllocator
 
     private final List<PortRange> portRanges = new ArrayList<>();
 
-    private SelectorStrategy selectorStrategy;
-
     public PortAllocator( Collection<PortRange> portRanges )
     {
         this.portRanges.addAll( portRanges );
@@ -81,15 +79,8 @@ public class PortAllocator
         portRanges.add( portRange );
     }
 
-    public void setSelectorStrategy( SelectorStrategy selectorStrategy )
-    {
-        this.selectorStrategy = selectorStrategy;
-    }
-
     public int next()
     {
-//        selectorStrategy.choose( lowest, highest, lastSelected );
-
         return 0;
     }
 }

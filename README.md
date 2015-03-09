@@ -22,10 +22,9 @@ Example - Port selectors
 
                     <preferredPorts>8090</preferredPorts>
 
-                    <strategy>
-                        <order>ascending|descending|random</order>
-                        <depletionAction>continue|fail</depletionAction>
-                    </strategy>
+                    <depletionAction>continue|fail</depletionAction>
+
+                    <validateAvailability>0,10,20,30</validateAvailability>
 
                 </portSelector>
 
