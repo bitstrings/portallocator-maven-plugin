@@ -1,8 +1,8 @@
 portallocator-maven-plugin
 ==========================
 
-Example - Port allocators
--------------------------
+Example - Port selectors
+------------------------
 ```
 <groupId>org.bitstrings.maven.plugins</groupId>
 <artifactId>portallocator-maven-plugin</artifactId>
