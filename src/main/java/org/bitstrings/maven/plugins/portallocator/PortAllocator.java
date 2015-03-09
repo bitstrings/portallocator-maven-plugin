@@ -3,39 +3,56 @@ package org.bitstrings.maven.plugins.portallocator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.base.Splitter;
-
 public class PortAllocator
 {
     public static class Strategy
     {
+        public enum Order
+        {
+            ASCENDING, DESCENDING, RANDOM;
+        }
+
+        public enum DepletionAction
+        {
+            CONTINUE, FAIL;
+        }
+
+        private Order order;
+        private DepletionAction depletionAction;
+
+        public Order getOrder()
+        {
+            return order;
+        }
+
+        public DepletionAction getDepletionAction()
+        {
+            return depletionAction;
+        }
     }
 
     public static class PreferredPorts
     {
-        private List<Integer> ports = new LinkedList<Integer>();
+        private final List<String> portsList = new LinkedList<String>();
 
-        public void addPort( int port )
+        public void addPorts( String ports )
         {
-            ports.add( port );
+            portsList.add( ports );
         }
 
-        public void set( String csvPorts )
+        public void set( String ports )
         {
-            for ( String portStr : Splitter.on( ',' ).trimResults().omitEmptyStrings().split( csvPorts ) )
-            {
-                ports.add( Integer.parseInt( portStr ) );
-            }
+            portsList.add( ports );
         }
     }
 
-    private String name;
+    private String id;
     private PreferredPorts preferredPorts;
     private Strategy strategy;
 
-    public String getName()
+    public String getId()
     {
-        return name;
+        return id;
     }
 
     public PreferredPorts getPreferredPorts()
