@@ -1,11 +1,11 @@
-portallocator-maven-plugin
+portSelector-maven-plugin
 ==========================
 
 Example - Port pools
 --------------------
 ```
 <groupId>org.bitstrings.maven.plugins</groupId>
-<artifactId>portallocator-maven-plugin</artifactId>
+<artifactId>portSelector-maven-plugin</artifactId>
 <executions>
     <execution>
         <id>pools</id>
@@ -14,9 +14,9 @@ Example - Port pools
         </goals>
         <configuration>
 
-            <portAllocators>
+            <portSelectors>
 
-                <portAllocator>
+                <portSelector>
 
                     <id>allocator-1</id>
 
@@ -27,9 +27,9 @@ Example - Port pools
                         <depletionAction>continue|fail</depletionAction>
                     </strategy>
 
-                </portAllocator>
+                </portSelector>
 
-            </portAllocators>
+            </portSelectors>
 
         </configuration>
     </execution>

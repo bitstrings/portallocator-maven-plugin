@@ -2,14 +2,14 @@ package org.bitstrings.maven.plugins.portallocator;
 
 public class Port
 {
-    private PortAllocator portAllocator;
+    private PortSelector portSelector;
     private String poolRef;
     private String name;
     private int offsetRefPort;
 
-    public PortAllocator getPortAllocator()
+    public PortSelector getPortSelector()
     {
-        return portAllocator;
+        return portSelector;
     }
 
     public String getPoolRef()
