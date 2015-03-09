@@ -3,18 +3,20 @@ package org.bitstrings.maven.plugins.portallocator;
 public class Port
 {
     private PortSelector portSelector;
-    private String poolRef;
+    private String portSelectorRef;
     private String name;
-    private int offsetRefPort;
+    private int offsetBasePort;
+    private String portNameSuffix;
+    private String offsetNameSuffix;
 
     public PortSelector getPortSelector()
     {
         return portSelector;
     }
 
-    public String getPoolRef()
+    public String getPortSelectorRef()
     {
-        return poolRef;
+        return portSelectorRef;
     }
 
     public String getName()
@@ -22,8 +24,18 @@ public class Port
         return name;
     }
 
-    public int getOffsetRefPort()
+    public int getOffsetBasePort()
     {
-        return offsetRefPort;
+        return offsetBasePort;
+    }
+
+    public String getPortNameSuffix()
+    {
+        return portNameSuffix;
+    }
+
+    public String getOffsetNameSuffix()
+    {
+        return offsetNameSuffix;
     }
 }

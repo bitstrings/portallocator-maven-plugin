@@ -42,7 +42,7 @@ Example - Port assignment
 <configuration>
     <ports>
         <port>
-            <allocatorRef>selector-1</allocatorRef>
+            <portSelectorRef>selector-1</portSelectorRef>
             <name>tomcat</name>
             <portNameSuffix>port</portNameSuffix>
             <offsetNameSuffix>offset</offsetNameSuffix>
