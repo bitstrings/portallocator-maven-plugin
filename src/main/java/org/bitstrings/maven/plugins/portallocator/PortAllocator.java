@@ -1,23 +1,37 @@
 package org.bitstrings.maven.plugins.portallocator;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PortAllocator
 {
-    private static final int LOWEST_PORT_DEFAULT = 1024;
-    private static final int HIGHEST_PORT_DEFAULT = 65535;
+    private static final int LOWEST_PORT_DEFAULT = 0x0400;
+    private static final int HIGHEST_PORT_DEFAULT = 0xFFFF;
+
     private static final int PREFERRED_PORT_DEFAULT = 8090;
+
+    private static final int PORT_NA = -1;
 
     public static class Builder
     {
         private final List<PortRange> portRanges = new LinkedList<>();
+        private boolean overflowPermitted;
 
         public Builder port( int port )
         {
             portRanges.add( new PortRange( port ) );
+
+            return this;
+        }
+
+        public Builder overflowPermitted()
+        {
+            overflowPermitted = true;
 
             return this;
         }
@@ -32,7 +46,7 @@ public class PortAllocator
 
         public PortAllocator build()
         {
-            return new PortAllocator( portRanges );
+            return new PortAllocator( overflowPermitted, portRanges );
         }
     }
 
@@ -70,23 +84,58 @@ public class PortAllocator
     }
 
     private final List<PortRange> portRanges = new ArrayList<>();
-    private int portRangesListIndex;
-    private int portIndex;
+    private boolean overflowPermitted;
 
-    public PortAllocator( Collection<PortRange> portRanges )
+    private Iterator<PortRange> portRangesIterator;
+    private PortRange lastPortRange;
+
+    public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges )
     {
         this.portRanges.addAll( portRanges );
+        this.overflowPermitted = overflowPermitted;
+
+        this.portRangesIterator = portRanges.iterator();
     }
 
-    public PortAllocator() {}
-
-    public void addPortRange( PortRange portRange )
+    public boolean isOverflowPermitted()
     {
-        portRanges.add( portRange );
+        return overflowPermitted;
     }
 
     public int next()
     {
+//        if ( !portRangesIterator.hasNext() )
+//        {
+//            if ( !overflowPermitted )
+//            {
+//                return PORT_NA;
+//            }
+//
+//        }
+
+        if ( ( lastPortRange == null ) && portRangesIterator.hasNext() )
+        {
+            lastPortRange = portRangesIterator.next();
+        }
+
         return 0;
+    }
+
+    protected boolean isPortAvail( final int port )
+        throws IOException
+    {
+        ServerSocket server;
+        try
+        {
+            server = new ServerSocket( port );
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
+
+        server.close();
+
+        return true;
     }
 }

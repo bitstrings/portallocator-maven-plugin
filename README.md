@@ -8,6 +8,7 @@ Example - Port assignment
     <ports>
         <port>
             <preferredPorts>8080</preferredPorts>
+            <depletionStrategy>continue|fail</depletionStrategy>
 
             <name>tomcat</name>
 
