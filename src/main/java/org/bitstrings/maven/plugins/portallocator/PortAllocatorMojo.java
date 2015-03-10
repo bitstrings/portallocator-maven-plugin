@@ -28,20 +28,11 @@ public class PortAllocatorMojo
     private boolean verbose;
 
     @Parameter
-    private List<PortSelector> portSelectors = new LinkedList<>();
-
-    @Parameter
     private List<Port> ports = new LinkedList<>();
 
     @Override
     public void execute()
         throws MojoExecutionException, MojoFailureException
-    {
-    }
-
-
-    public static void main( String[] args )
-        throws Exception
     {
     }
 }
