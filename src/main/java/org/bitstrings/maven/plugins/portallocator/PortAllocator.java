@@ -7,6 +7,10 @@ import java.util.List;
 
 public class PortAllocator
 {
+    private static final int LOWEST_PORT_DEFAULT = 1024;
+    private static final int HIGHEST_PORT_DEFAULT = 65535;
+    private static final int PREFERRED_PORT_DEFAULT = 8090;
+
     public static class Builder
     {
         private final List<PortRange> portRanges = new LinkedList<>();
@@ -66,6 +70,8 @@ public class PortAllocator
     }
 
     private final List<PortRange> portRanges = new ArrayList<>();
+    private int portRangesListIndex;
+    private int portIndex;
 
     public PortAllocator( Collection<PortRange> portRanges )
     {
