@@ -13,8 +13,6 @@ public class PortAllocator
     private static final int LOWEST_PORT_DEFAULT = 0x0400;
     private static final int HIGHEST_PORT_DEFAULT = 0xFFFF;
 
-    private static final int PREFERRED_PORT_DEFAULT = 8090;
-
     private static final int PORT_NA = -1;
 
     public static class Builder
@@ -55,12 +53,16 @@ public class PortAllocator
         private int lowest;
         private int highest;
 
+        private int current;
+
+        private boolean wrapAround;
+
         public PortRange( int port )
         {
             this( port, port );
         }
 
-        public PortRange( int lowest, int highest )
+        public PortRange( int lowest, int highest, int current, boolean wrapAround )
             throws IllegalArgumentException
         {
             this.lowest = lowest;
@@ -70,6 +72,16 @@ public class PortAllocator
             {
                 throw new IllegalArgumentException( "Range must be valid, i.e.: lowest >= 0 and lowest <= highest." );
             }
+
+            this.current = current;
+
+            this.wrapAround = wrapAround;
+        }
+
+        public PortRange( int lowest, int highest )
+            throws IllegalArgumentException
+        {
+            this( lowest, highest, PORT_NA, false );
         }
 
         public int getLowest()
@@ -81,13 +93,28 @@ public class PortAllocator
         {
             return highest;
         }
+
+        public int nextPort()
+        {
+            if ( current == PORT_NA )
+            {
+                current = lowest;
+            }
+            else if ( ( ++current ) > highest )
+            {
+                current = ( wrapAround ? lowest : PORT_NA );
+            }
+
+            return current;
+        }
     }
 
     private final List<PortRange> portRanges = new ArrayList<>();
+    private final Iterator<PortRange> portRangesIterator;
     private boolean overflowPermitted;
-
-    private Iterator<PortRange> portRangesIterator;
     private PortRange lastPortRange;
+    private int lastPort;
+    private int lastValidPort;
 
     public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges )
     {
@@ -95,6 +122,8 @@ public class PortAllocator
         this.overflowPermitted = overflowPermitted;
 
         this.portRangesIterator = portRanges.iterator();
+
+        this.lastPortRange = portRangesIterator.next();
     }
 
     public boolean isOverflowPermitted()
@@ -102,23 +131,31 @@ public class PortAllocator
         return overflowPermitted;
     }
 
-    public int next()
+    public int nextAvailablePort()
+        throws IOException
     {
-//        if ( !portRangesIterator.hasNext() )
-//        {
-//            if ( !overflowPermitted )
-//            {
-//                return PORT_NA;
-//            }
-//
-//        }
-
-        if ( ( lastPortRange == null ) && portRangesIterator.hasNext() )
+        do
         {
-            lastPortRange = portRangesIterator.next();
-        }
+            while ( ( lastPort = lastPortRange.nextPort() ) == PORT_NA )
+            {
+                if ( portRangesIterator.hasNext() )
+                {
+                    lastPortRange = portRangesIterator.next();
+                }
+                else
+                {
+                    if ( overflowPermitted )
+                    {
+                        lastPortRange = new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, lastValidPort, true );
+                    }
 
-        return 0;
+                    return PORT_NA;
+                }
+            }
+        }
+        while ( !isPortAvail( lastPort ) );
+
+        return ( lastValidPort = lastPort );
     }
 
     protected boolean isPortAvail( final int port )
