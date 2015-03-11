@@ -113,8 +113,6 @@ public class PortAllocator
     private final Iterator<PortRange> portRangesIterator;
     private boolean overflowPermitted;
     private PortRange lastPortRange;
-    private int lastPort;
-    private int lastValidPort;
 
     public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges )
     {
@@ -134,9 +132,13 @@ public class PortAllocator
     public int nextAvailablePort()
         throws IOException
     {
+        int port;
+
         do
         {
-            while ( ( lastPort = lastPortRange.nextPort() ) == PORT_NA )
+            int lastPort = LOWEST_PORT_DEFAULT;
+
+            while ( ( port = lastPortRange.nextPort() ) == PORT_NA )
             {
                 if ( portRangesIterator.hasNext() )
                 {
@@ -146,16 +148,18 @@ public class PortAllocator
                 {
                     if ( overflowPermitted )
                     {
-                        lastPortRange = new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, lastValidPort, true );
+                        lastPortRange = new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, lastPort, true );
                     }
 
                     return PORT_NA;
                 }
             }
-        }
-        while ( !isPortAvail( lastPort ) );
 
-        return ( lastValidPort = lastPort );
+            lastPort = port;
+        }
+        while ( !isPortAvail( port ) );
+
+        return port;
     }
 
     protected boolean isPortAvail( final int port )
