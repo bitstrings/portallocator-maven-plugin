@@ -5,10 +5,10 @@ Example - Port assignment
 -------------------------
 ```
 <configuration>
-    <ports>
-        <port>
+    <portAllocations>
+        <portAllocation>
             <preferredPorts>8080</preferredPorts>
-            <depletionStrategy>continue|fail</depletionStrategy>
+            <depletionAction>continue|fail</depletionAction>
 
             <name>tomcat</name>
 
@@ -23,7 +23,7 @@ Example - Port assignment
                 <name></name>
                 <offset>10</offset>
             </relativePort>
-        </port>
-    </ports>
+        </portAllocation>
+    </portAllocations>
 </configuration>
 ```

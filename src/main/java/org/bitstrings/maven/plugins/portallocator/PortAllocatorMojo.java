@@ -2,7 +2,6 @@ package org.bitstrings.maven.plugins.portallocator;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.maven.execution.MavenSession;
@@ -28,11 +27,29 @@ public class PortAllocatorMojo
     private boolean verbose;
 
     @Parameter
-    private List<Port> ports = new LinkedList<>();
+    private List<PortAllocation> portAllocations;
 
     @Override
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        for ( PortAllocation portAllocation : portAllocations )
+        {
+            final PortAllocator.Builder portAllocatorBuilder = new PortAllocator.Builder();
+
+            if ( portAllocation.getDepletionAction() == PortAllocation.DepletionAction.CONTINUE )
+            {
+                portAllocatorBuilder.overflowPermitted();
+            }
+
+            try
+            {
+                System.out.println( "P: " + portAllocatorBuilder.build().nextAvailablePort() );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+        }
     }
 }

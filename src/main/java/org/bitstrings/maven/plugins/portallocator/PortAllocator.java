@@ -53,7 +53,7 @@ public class PortAllocator
         private int lowest;
         private int highest;
 
-        private int current;
+        private int next;
 
         private boolean wrapAround;
 
@@ -62,7 +62,7 @@ public class PortAllocator
             this( port, port );
         }
 
-        public PortRange( int lowest, int highest, int current, boolean wrapAround )
+        public PortRange( int lowest, int highest, int start, boolean wrapAround )
             throws IllegalArgumentException
         {
             this.lowest = lowest;
@@ -73,7 +73,7 @@ public class PortAllocator
                 throw new IllegalArgumentException( "Range must be valid, i.e.: lowest >= 0 and lowest <= highest." );
             }
 
-            this.current = current;
+            this.next = start;
 
             this.wrapAround = wrapAround;
         }
@@ -81,7 +81,7 @@ public class PortAllocator
         public PortRange( int lowest, int highest )
             throws IllegalArgumentException
         {
-            this( lowest, highest, PORT_NA, false );
+            this( lowest, highest, lowest, false );
         }
 
         public int getLowest()
@@ -96,16 +96,19 @@ public class PortAllocator
 
         public int nextPort()
         {
-            if ( current == PORT_NA )
+            if ( next > highest )
             {
-                current = lowest;
-            }
-            else if ( ( ++current ) > highest )
-            {
-                current = ( wrapAround ? lowest : PORT_NA );
+                next = ( wrapAround ? lowest : PORT_NA );
             }
 
-            return current;
+            try
+            {
+                return next;
+            }
+            finally
+            {
+                ++next;
+            }
         }
     }
 
@@ -116,7 +119,15 @@ public class PortAllocator
 
     public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges )
     {
-        this.portRanges.addAll( portRanges );
+        if ( ( portRanges == null ) || portRanges.isEmpty() )
+        {
+            portRanges.add( new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, LOWEST_PORT_DEFAULT, true ) );
+        }
+        else
+        {
+            this.portRanges.addAll( portRanges );
+        }
+
         this.overflowPermitted = overflowPermitted;
 
         this.portRangesIterator = portRanges.iterator();

@@ -24,7 +24,7 @@ limitations under the License.
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
-    <artifactId>pool-it</artifactId>
+    <artifactId>port-allocation-it</artifactId>
     <version>1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
@@ -41,25 +41,20 @@ limitations under the License.
                 <version>@project.version@</version>
                 <executions>
                     <execution>
-                        <id>pool</id>
+                        <id>port-allocation</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
-                            <portPools>
-                                <portPool>
-                                    <name>pool1</name>
-                                    <ports>8080,8082,8085</ports>
-                                </portPool>
-                                <portPool>
-                                    <name>pool2</name>
-                                    <ports>8081,8083,8087</ports>
-                                </portPool>
-                            </portPools>
-                            <ports>
-                                <port>
-                                </port>
-                            </ports>
+                            <portAllocations>
+                                <portAllocation>
+                                    <name>tomcat</name>
+                                </portAllocation>
+                                <portAllocation>
+                                    <preferredPorts>8090</preferredPorts>
+                                    <name>tomcat-preferred</name>
+                                </portAllocation>
+                            </portAllocations>
                         </configuration>
                     </execution>
                 </executions>

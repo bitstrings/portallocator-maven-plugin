@@ -3,7 +3,7 @@ package org.bitstrings.maven.plugins.portallocator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Port
+public class PortAllocation
 {
     public static class PreferredPorts
     {
@@ -23,6 +23,11 @@ public class Port
         {
             return portsList;
         }
+    }
+
+    public static enum DepletionAction
+    {
+        CONTINUE, FAIL;
     }
 
     public static class RelativePort
@@ -52,6 +57,8 @@ public class Port
     }
 
     private String name;
+    private PreferredPorts preferredPorts;
+    private DepletionAction depletionAction;
     private int offsetBasePort;
     private String portNameSuffix;
     private String offsetNameSuffix;
@@ -61,6 +68,16 @@ public class Port
     public String getName()
     {
         return name;
+    }
+
+    public PreferredPorts getPreferredPorts()
+    {
+        return preferredPorts;
+    }
+
+    public DepletionAction getDepletionAction()
+    {
+        return depletionAction;
     }
 
     public int getOffsetBasePort()
@@ -86,5 +103,10 @@ public class Port
     public List<RelativePort> getRelativePorts()
     {
         return relativePorts;
+    }
+
+    public void setDepletionAction( String depletionAction )
+    {
+        this.depletionAction = DepletionAction.valueOf( depletionAction.toUpperCase() );
     }
 }
