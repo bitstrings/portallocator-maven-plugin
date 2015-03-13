@@ -48,6 +48,12 @@ public class PortAllocator
         }
     }
 
+    public static interface Listener
+    {
+        boolean beforeAllocation();
+        boolean afterAllocation();
+    }
+
     public static class PortRange
     {
         private int lowest;
