@@ -21,6 +21,13 @@ public class PortAllocator
         private boolean overflowPermitted;
         private final List<Listener> listeners = new LinkedList<>();
 
+        public Builder overflowPermitted()
+        {
+            overflowPermitted = true;
+
+            return this;
+        }
+
         public Builder port( int port )
         {
             portRanges.add( new PortRange( port ) );
@@ -28,9 +35,9 @@ public class PortAllocator
             return this;
         }
 
-        public Builder overflowPermitted()
+        public Builder portFrom( int lowest )
         {
-            overflowPermitted = true;
+            portRanges.add( new PortRange( lowest, HIGHEST_PORT_DEFAULT ) );
 
             return this;
         }
@@ -165,24 +172,22 @@ public class PortAllocator
         throws IOException
     {
         int port;
+        int lastPort = LOWEST_PORT_DEFAULT;
 
         do
         {
-            int lastPort = LOWEST_PORT_DEFAULT;
-
             while ( ( port = lastPortRange.nextPort() ) == PORT_NA )
             {
                 if ( portRangesIterator.hasNext() )
                 {
                     lastPortRange = portRangesIterator.next();
                 }
+                else if ( overflowPermitted )
+                {
+                    lastPortRange = new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, lastPort, true );
+                }
                 else
                 {
-                    if ( overflowPermitted )
-                    {
-                        lastPortRange = new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, lastPort, true );
-                    }
-
                     return PORT_NA;
                 }
             }

@@ -16,6 +16,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.bitstrings.maven.plugins.portallocator.PortAllocation.DepletionAction;
 
+import com.google.common.base.Splitter;
+
 @Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresOnline = false )
 public class PortAllocatorMojo
     extends AbstractMojo
@@ -52,7 +54,7 @@ public class PortAllocatorMojo
             }
 
             @Override
-            public void afterAllocation(int port)
+            public void afterAllocation( int port )
             {
                 synchronized ( allocatedPorts )
                 {
@@ -76,11 +78,20 @@ public class PortAllocatorMojo
                 portAllocatorBuilder.overflowPermitted();
             }
 
+            for ( String portsCsv : portAllocation.getPreferredPorts().getPortsList() )
+            {
+                addPortRanges( portAllocatorBuilder, portsCsv );
+            }
+
             portAllocatorBuilder.listener( PORT_ALLOCATOR_LISTENER );
 
             try
             {
-                System.out.println( "P: " + portAllocatorBuilder.build().nextAvailablePort() );
+                mavenProject.getProperties().put(
+                        portAllocation.getName()
+                            + portAllocation.getNameLevelSeparator()
+                            + portAllocation.getPortNameSuffix(),
+                        String.valueOf( portAllocatorBuilder.build().nextAvailablePort() ) );
             }
             catch ( Exception e )
             {
@@ -119,6 +130,34 @@ public class PortAllocatorMojo
         if ( portAllocation.getNameLevelSeparator() == null )
         {
             portAllocation.setNameLevelSeparator( NAME_LEVEL_SEPARATOR_DEFAULT );
+        }
+    }
+
+    protected void addPortRanges( PortAllocator.Builder builder, String portsCsv )
+    {
+        for ( String portRange : Splitter.on( ',' ).trimResults().omitEmptyStrings().split( portsCsv ) )
+        {
+            final int rangeSepIndex = portRange.indexOf( '-' );
+
+            if ( rangeSepIndex == -1 )
+            {
+                builder.port( Integer.parseInt( portRange.trim() ) );
+            }
+            else
+            {
+                final int lowest = Integer.parseInt( portRange.substring( 0 , rangeSepIndex ).trim() );
+
+                if ( rangeSepIndex == portRange.length() )
+                {
+                    builder.portFrom( lowest );
+                }
+                else
+                {
+                    builder.portRange(
+                        lowest,
+                        Integer.parseInt( portRange.substring( rangeSepIndex ).trim() ) );
+                }
+            }
         }
     }
 }
