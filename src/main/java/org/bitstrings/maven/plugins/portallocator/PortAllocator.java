@@ -19,6 +19,7 @@ public class PortAllocator
     {
         private final List<PortRange> portRanges = new LinkedList<>();
         private boolean overflowPermitted;
+        private final List<Listener> listeners = new LinkedList<>();
 
         public Builder port( int port )
         {
@@ -42,16 +43,23 @@ public class PortAllocator
             return this;
         }
 
+        public Builder listener( Listener listener )
+        {
+            listeners.add( listener );
+
+            return this;
+        }
+
         public PortAllocator build()
         {
-            return new PortAllocator( overflowPermitted, portRanges );
+            return new PortAllocator( overflowPermitted, portRanges, listeners );
         }
     }
 
     public static interface Listener
     {
-        boolean beforeAllocation();
-        boolean afterAllocation();
+        boolean beforeAllocation( int potentialPort );
+        void afterAllocation( int port );
     }
 
     public static class PortRange
@@ -123,7 +131,9 @@ public class PortAllocator
     private boolean overflowPermitted;
     private PortRange lastPortRange;
 
-    public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges )
+    private final List<Listener> listeners = new LinkedList<>();
+
+    public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges, List<Listener> listeners )
     {
         if ( ( portRanges == null ) || portRanges.isEmpty() )
         {
@@ -139,6 +149,11 @@ public class PortAllocator
         this.portRangesIterator = portRanges.iterator();
 
         this.lastPortRange = portRangesIterator.next();
+
+        if ( listeners != null )
+        {
+            this.listeners.addAll( listeners );
+        }
     }
 
     public boolean isOverflowPermitted()
@@ -173,8 +188,23 @@ public class PortAllocator
             }
 
             lastPort = port;
+
+            for ( Listener l : listeners )
+            {
+                if ( !l.beforeAllocation( port ) )
+                {
+                    port = PORT_NA;
+
+                    break;
+                }
+            }
         }
-        while ( !isPortAvail( port ) );
+        while ( ( port == PORT_NA ) || !isPortAvail( port ) );
+
+        for ( Listener l : listeners )
+        {
+            l.afterAllocation( port );
+        }
 
         return port;
     }

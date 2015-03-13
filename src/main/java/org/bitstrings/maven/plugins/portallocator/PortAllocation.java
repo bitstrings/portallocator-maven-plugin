@@ -70,9 +70,19 @@ public class PortAllocation
         return name;
     }
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     public PreferredPorts getPreferredPorts()
     {
         return preferredPorts;
+    }
+
+    public void setPreferredPorts(PreferredPorts preferredPorts)
+    {
+        this.preferredPorts = preferredPorts;
     }
 
     public DepletionAction getDepletionAction()
@@ -80,9 +90,24 @@ public class PortAllocation
         return depletionAction;
     }
 
+    public void setDepletionAction( String depletionAction )
+    {
+        this.depletionAction = DepletionAction.valueOf( depletionAction.toUpperCase() );
+    }
+
+    public void setDepletionAction( DepletionAction depletionAction )
+    {
+        this.depletionAction = depletionAction;
+    }
+
     public int getOffsetBasePort()
     {
         return offsetBasePort;
+    }
+
+    public void setOffsetBasePort(int offsetBasePort)
+    {
+        this.offsetBasePort = offsetBasePort;
     }
 
     public String getPortNameSuffix()
@@ -90,9 +115,19 @@ public class PortAllocation
         return portNameSuffix;
     }
 
+    public void setPortNameSuffix(String portNameSuffix)
+    {
+        this.portNameSuffix = portNameSuffix;
+    }
+
     public String getOffsetNameSuffix()
     {
         return offsetNameSuffix;
+    }
+
+    public void setOffsetNameSuffix(String offsetNameSuffix)
+    {
+        this.offsetNameSuffix = offsetNameSuffix;
     }
 
     public String getNameLevelSeparator()
@@ -100,13 +135,18 @@ public class PortAllocation
         return nameLevelSeparator;
     }
 
+    public void setNameLevelSeparator(String nameLevelSeparator)
+    {
+        this.nameLevelSeparator = nameLevelSeparator;
+    }
+
     public List<RelativePort> getRelativePorts()
     {
         return relativePorts;
     }
 
-    public void setDepletionAction( String depletionAction )
+    public void addRelativePort( RelativePort relativePort )
     {
-        this.depletionAction = DepletionAction.valueOf( depletionAction.toUpperCase() );
+        relativePorts.add( relativePort );
     }
 }
