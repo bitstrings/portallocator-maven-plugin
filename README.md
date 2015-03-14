@@ -3,7 +3,7 @@ portallocator-maven-plugin
 
 ### Description
 
-The port allocator plugin finds an available port.
+The port allocator plugin finds an available port and makes sure they are unique for a Maven execution.
 
 Goal `allocate`
 ---------------
@@ -13,6 +13,11 @@ Goal `allocate`
 * Requires a Maven project to be executed.
 * The goal is thread-safe and supports parallel builds.
 * Binds by default to the lifecycle phase: validate.
+
+| name | type | Since | Description |
+| ---- | ---- | ----- | ----------- |
+| portAllocations | List | 1.0 | List of ports to allocate. |
+| quiet | Boolean | 1.0 | Set to `true` for no output. |
 
 #### Tag `portAllocation`
 
@@ -116,7 +121,7 @@ Example - Port offset assignment
 <configuration>
     <portAllocations>
         <portAllocation>
-            <name>tomcat</name>
+            <name>wildfly</name>
             <offsetBasePort>8080</offsetBasePort>
         </portAllocation>
     </portAllocations>
@@ -127,8 +132,8 @@ When you set `offsetBasePort` a new "offset" property will be assigned the offse
 
 #### Result might be:
 ```
-tomcat.port = 8090
-tomcat.offset = 10
+wildfly.port = 8090
+wildfly.offset = 10
 ```
 
 
