@@ -8,7 +8,9 @@ Goal -> allocate
 | name | String | 1.0 | The first level name of the property. |
 | preferredPorts | List | 1.0 | The preferred ports.<br/>**Default:** 8090 |
 | offsetBasePort | Integer | 1.0 | The base port for offset calculation. |
-
+| nameLevelSeparator | String | 1.0 | The name level separator.<br/>**Default:** . |
+| portNameSuffix | String | 1.0 | The port name suffix.<br/>**Default:** port |
+| offsetNameSuffix | String | 1.0 | The offset name suffix.<br/>**Default:** offset |
 
 Example - Plugin execution
 --------------------------
