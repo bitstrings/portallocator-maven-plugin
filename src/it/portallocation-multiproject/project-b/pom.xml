@@ -23,15 +23,15 @@ limitations under the License.
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
-    <artifactId>portallocation-simple-it</artifactId>
-    <version>1-SNAPSHOT</version>
+    <parent>
+        <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
+        <artifactId>portallocation-multiproject-it</artifactId>
+        <version>1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>portallocation-multiproject-b-it</artifactId>
 
     <packaging>jar</packaging>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <resources>
@@ -44,7 +44,6 @@ limitations under the License.
             <plugin>
                 <groupId>@project.groupId@</groupId>
                 <artifactId>@project.artifactId@</artifactId>
-                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>port-allocation</id>
@@ -57,25 +56,14 @@ limitations under the License.
 
                                 <portAllocation>
                                     <name>tomcat</name>
-                                </portAllocation>
-
-                                <portAllocation>
-                                    <preferredPorts>8090</preferredPorts>
-                                    <name>tomcat-preferred</name>
-                                </portAllocation>
-
-                                <portAllocation>
-                                    <preferredPorts>9000-10000</preferredPorts>
-                                    <name>tomcat-preferred-2</name>
-                                    <offsetBasePort>8080</offsetBasePort>
-                                </portAllocation>
-
-                                <portAllocation>
-                                    <preferredPorts>8090</preferredPorts>
-                                    <name>tomcat-2</name>
+                                    <offsetBasePort>9090</offsetBasePort>
+                                    <relativePort>
+                                        <name>rmi</name>
+                                        <offset>1</offset>
+                                    </relativePort>
                                     <relativePort>
                                         <name>jndi</name>
-                                        <offset>10</offset>
+                                        <offset>5</offset>
                                     </relativePort>
                                 </portAllocation>
 
