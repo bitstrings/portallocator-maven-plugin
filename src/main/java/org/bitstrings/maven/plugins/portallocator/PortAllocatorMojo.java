@@ -139,7 +139,7 @@ public class PortAllocatorMojo
             }
             catch ( Exception e )
             {
-                e.printStackTrace();
+                throw new MojoFailureException( e.getLocalizedMessage(), e );
             }
         }
     }
