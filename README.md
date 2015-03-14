@@ -47,6 +47,26 @@ Example - Simple port assignment
 tomcat.port = 8090
 ```
 
+Example - Port Offset assignment
+--------------------------------
+```xml
+<configuration>
+    <portAllocations>
+        <portAllocation>
+            <name>tomcat</name>
+            <offsetBasePort>8080</offsetBasePort>
+        </portAllocation>
+    </portAllocations>
+</configuration>
+```
+
+#### Result:
+```
+tomcat.port = 8090
+tomcat.offset = 10
+```
+
+
 Example - Port range
 --------------------
 ```xml
@@ -55,6 +75,7 @@ Example - Port range
         <portAllocation>
             <name>tomcat</name>
             <preferredPorts>8080-8090</preferredPorts>
+            <depletionAction>fail</depletionAction>
         </portAllocation>
     </portAllocations>
 </configuration>
@@ -65,7 +86,12 @@ Example - Port range
     <portAllocations>
         <portAllocation>
             <name>tomcat</name>
-            <preferredPorts>8080-</preferredPorts>
+            <preferredPorts>
+                <ports>8090</ports>
+                <ports>9090</ports>
+                <ports>10000</ports>
+            </preferredPorts>
+            <depletionAction>fail</depletionAction>
         </portAllocation>
     </portAllocations>
 </configuration>
