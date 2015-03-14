@@ -13,6 +13,5 @@ Example - Simple port assignment
 </configuration>
 ```
 
-### Result:
-
-| `tomcat.port = 8090` |
+#### Result:
+`tomcat.port = 8090`
