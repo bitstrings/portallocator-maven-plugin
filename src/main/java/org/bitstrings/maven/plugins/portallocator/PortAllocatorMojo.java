@@ -40,7 +40,7 @@ public class PortAllocatorMojo
 
     private static final String PREFERRED_PORTS_DEFAULT = "8090";
     private static final String PORT_NAME_SUFFIX_DEFAULT = "port";
-    private static final String OFFSET_NAME_SUFFIX_DEFAULT = "offset";
+    private static final String OFFSET_NAME_SUFFIX_DEFAULT = "port-offset";
     private static final String NAME_LEVEL_SEPARATOR_DEFAULT = ".";
 
     private static final Set<Integer> allocatedPorts = new HashSet<>();

@@ -31,7 +31,7 @@ Goal `allocate`
 | offsetBasePort | Integer | 1.0 | The base port for offset calculation. |
 | nameLevelSeparator | String | 1.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 1.0 | The port name suffix.<br/>**Default:** `port` |
-| offsetNameSuffix | String | 1.0 | The offset name suffix.<br/>**Default:** `offset` |
+| offsetNameSuffix | String | 1.0 | The offset name suffix.<br/>**Default:** `port-offset` |
 | relativePorts | list | 1.0 | Extra ports relative to the preferred allocated port. |
 
 
@@ -135,7 +135,7 @@ When you set `offsetBasePort` a new "offset" property will be assigned the offse
 #### Result might be:
 ```
 wildfly.port = 8090
-wildfly.offset = 10
+wildfly.port-offset = 10
 ```
 
 
