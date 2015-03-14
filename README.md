@@ -28,6 +28,43 @@ Goal `allocate`
 | relativePorts | list | 1.0 | Extra ports relative to the preferred allocated port. |
 
 
+#### Structure - PreferredPorts
+```xml
+<preferredPorts>
+    <ports></ports>
+    <ports></ports>
+    ...
+</preferredPorts>
+```
+
+or use the collapsed form
+
+```xml
+<preferredPorts></preferredPorts>
+```
+
+#### Structure - RelativePorts
+```xml
+<relativePorts>
+    <relativePort>
+        <name></name>
+        <offset></offset>
+    </relativePort>
+    ...
+</relativePorts>
+```
+
+or simply use the compact format
+
+```xml
+<relativePort>
+    <name></name>
+    <offset></offset>
+</relativePort>
+...
+```
+
+
 Example - Plugin execution
 --------------------------
 ```xml
