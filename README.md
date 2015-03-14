@@ -6,17 +6,8 @@ Goal -> allocate
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | name | String | 1.0 | The first level name of the property. |
-| preferredPorts | List | 1.0 |
-```
-<PreferredPorts>8080</PreferredPorts>
-
-<PreferredPorts>8080-8090</PreferredPorts>
-
-<PreferredPorts>
-    <ports>8080-8090</ports>
-    <ports>9090-</ports>
-</PreferredPorts>
-``` |
+| preferredPorts | List | 1.0 | The preferred ports. |
+| offsetBasePort | Integer | 1.0 | The base port for offset calculation. |
 
 
 Example - Plugin execution
