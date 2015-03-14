@@ -3,6 +3,9 @@ portallocator-maven-plugin
 
 Goal `allocate`
 ---------------
+
+### <portAllocation>
+
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | name | String | 1.0 | The first level name of the property. |
