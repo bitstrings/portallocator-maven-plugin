@@ -13,7 +13,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -27,14 +26,14 @@ import com.google.common.base.Strings;
 public class PortAllocatorMojo
     extends AbstractMojo
 {
-    @Component
+    @Parameter( defaultValue = "${project}", readonly = true )
     private MavenProject mavenProject;
 
-    @Component
+    @Parameter( defaultValue = "${session}", readonly = true )
     private MavenSession mavenSession;
 
     @Parameter( defaultValue = "false" )
-    private boolean verbose;
+    private boolean quiet;
 
     @Parameter
     private List<PortAllocation> portAllocations;
