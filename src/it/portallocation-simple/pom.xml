@@ -60,6 +60,14 @@ limitations under the License.
                                     <preferredPorts>8090</preferredPorts>
                                     <name>tomcat-preferred</name>
                                 </portAllocation>
+                                <portAllocation>
+                                    <preferredPorts>8090</preferredPorts>
+                                    <name>tomcat-2</name>
+                                    <relativePort>
+                                        <name>jndi</name>
+                                        <offset>10</offset>
+                                    </relativePort>
+                                </portAllocation>
                             </portAllocations>
                         </configuration>
                     </execution>
