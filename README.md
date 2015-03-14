@@ -7,6 +7,7 @@ Goal -> allocate
 | ---- | ---- | ----- | ----------- |
 | name | String | 1.0 | The first level name of the property. |
 | preferredPorts | List | 1.0 | The preferred ports.<br/>**Default:** 8090 |
+| depletionAction | String | 1.0 | The action to take if preferred ports are depleted.<br/>**Values:**continue,fail<br/>**Default:** continue  |
 | offsetBasePort | Integer | 1.0 | The base port for offset calculation. |
 | nameLevelSeparator | String | 1.0 | The name level separator.<br/>**Default:** . |
 | portNameSuffix | String | 1.0 | The port name suffix.<br/>**Default:** port |
