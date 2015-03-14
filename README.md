@@ -1,10 +1,20 @@
 portallocator-maven-plugin
 ==========================
 
+### Description
+
+The port allocator plugin finds an available port.
+
 Goal `allocate`
 ---------------
 
-### <portAllocation>
+### Attributes
+
+* Requires a Maven project to be executed.
+* The goal is thread-safe and supports parallel builds.
+* Binds by default to the lifecycle phase: validate.
+
+#### Tag `portAllocation`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
