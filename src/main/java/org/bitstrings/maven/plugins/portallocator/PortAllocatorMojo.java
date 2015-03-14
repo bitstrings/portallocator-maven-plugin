@@ -215,15 +215,29 @@ public class PortAllocatorMojo
         final String portNamePrefix =
                 ( getPortPropertyName( portAllocation, levelNames ) + portAllocation.getNameLevelSeparator() );
 
-        mavenProject.getProperties().put(
-                portNamePrefix + portAllocation.getPortNameSuffix(),
-                String.valueOf( port ) );
+        final String portPropertyName = portNamePrefix + portAllocation.getPortNameSuffix();
+
+        mavenProject.getProperties().put( portPropertyName, String.valueOf( port ) );
+
+        if ( !quiet && getLog().isInfoEnabled() )
+        {
+            getLog().info( "Assigning port [" + port + "] to property [" +  portPropertyName + "]" );
+        }
 
         if ( portAllocation.getOffsetBasePort() != null )
         {
-            mavenProject.getProperties().put(
-                portNamePrefix + portAllocation.getOffsetNameSuffix(),
-                String.valueOf( port - portAllocation.getOffsetBasePort() ) );
+            final String offsetPropertyName = portNamePrefix + portAllocation.getOffsetNameSuffix();
+            final String offset = String.valueOf( port - portAllocation.getOffsetBasePort() );
+
+            mavenProject.getProperties().put( offsetPropertyName, offset );
+
+            if ( !quiet && getLog().isInfoEnabled() )
+            {
+                getLog().info(
+                        "Assigning offset [" + offset + "] "
+                            + "from base port [" + portAllocation.getOffsetBasePort() + "] "
+                            + "to property [" +  offsetPropertyName + "]" );
+            }
         }
     }
 }
