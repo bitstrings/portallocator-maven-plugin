@@ -39,7 +39,11 @@ Example - Plugin execution
                 <goal>allocate</goal>
             </goals>
             <configuration>
-                ...
+                <portAllocations>
+                    <portAllocation>
+                        <name>tomcat</name>
+                    </portAllocation>
+                </portAllocations>
             </configuration>
         </execution>
     <executions>
@@ -58,12 +62,14 @@ Example - Simple port assignment
 </configuration>
 ```
 
-#### Result:
+This is the simplest way you can assign a port. The default preferred port is 8090.
+
+#### Result might be or any other port depending on availability:
 ```
 tomcat.port = 8090
 ```
 
-Example - Port Offset assignment
+Example - Port offset assignment
 --------------------------------
 ```xml
 <configuration>
@@ -76,7 +82,9 @@ Example - Port Offset assignment
 </configuration>
 ```
 
-#### Result:
+When you set *offsetBasePort* a new "offset" property will be assigned the offset between the allocated port and the base port.
+
+#### Result might be:
 ```
 tomcat.port = 8090
 tomcat.offset = 10
