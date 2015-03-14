@@ -14,6 +14,8 @@ Goal `allocate`
 * The goal is thread-safe and supports parallel builds.
 * Binds by default to the lifecycle phase: validate.
 
+### Configuration
+
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | portAllocations | List | 1.0 | List of ports to allocate. |
