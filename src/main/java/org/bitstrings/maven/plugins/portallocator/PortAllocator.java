@@ -83,13 +83,19 @@ public class PortAllocator
             this( port, port );
         }
 
+        public PortRange( int lowest, int highest )
+            throws IllegalArgumentException
+        {
+            this( lowest, highest, lowest, false );
+        }
+
         public PortRange( int lowest, int highest, int start, boolean wrapAround )
             throws IllegalArgumentException
         {
             this.lowest = lowest;
             this.highest = highest;
 
-            if ( ( lowest > highest ) || ( lowest < 0 ) )
+            if ( ( highest < lowest ) || ( lowest < 0 ) )
             {
                 throw new IllegalArgumentException( "Range must be valid, i.e.: lowest >= 0 and lowest <= highest." );
             }
@@ -97,12 +103,6 @@ public class PortAllocator
             this.next = start;
 
             this.wrapAround = wrapAround;
-        }
-
-        public PortRange( int lowest, int highest )
-            throws IllegalArgumentException
-        {
-            this( lowest, highest, lowest, false );
         }
 
         public int getLowest()

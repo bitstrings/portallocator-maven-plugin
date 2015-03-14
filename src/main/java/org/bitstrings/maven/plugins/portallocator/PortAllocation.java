@@ -35,12 +35,12 @@ public class PortAllocation
         private String name;
         private int offset;
 
-        public void setName(String name)
+        public void setName( String name )
         {
             this.name = name;
         }
 
-        public void setOffset(int offset)
+        public void setOffset( int offset )
         {
             this.offset = offset;
         }
@@ -59,7 +59,7 @@ public class PortAllocation
     private String name;
     private PreferredPorts preferredPorts;
     private DepletionAction depletionAction;
-    private int offsetBasePort;
+    private Integer offsetBasePort;
     private String portNameSuffix;
     private String offsetNameSuffix;
     private String nameLevelSeparator;
@@ -70,7 +70,7 @@ public class PortAllocation
         return name;
     }
 
-    public void setName(String name)
+    public void setName( String name )
     {
         this.name = name;
     }
@@ -80,7 +80,7 @@ public class PortAllocation
         return preferredPorts;
     }
 
-    public void setPreferredPorts(PreferredPorts preferredPorts)
+    public void setPreferredPorts( PreferredPorts preferredPorts )
     {
         this.preferredPorts = preferredPorts;
     }
@@ -100,12 +100,12 @@ public class PortAllocation
         this.depletionAction = depletionAction;
     }
 
-    public int getOffsetBasePort()
+    public Integer getOffsetBasePort()
     {
         return offsetBasePort;
     }
 
-    public void setOffsetBasePort(int offsetBasePort)
+    public void setOffsetBasePort( Integer offsetBasePort )
     {
         this.offsetBasePort = offsetBasePort;
     }
@@ -115,7 +115,7 @@ public class PortAllocation
         return portNameSuffix;
     }
 
-    public void setPortNameSuffix(String portNameSuffix)
+    public void setPortNameSuffix( String portNameSuffix )
     {
         this.portNameSuffix = portNameSuffix;
     }
@@ -125,7 +125,7 @@ public class PortAllocation
         return offsetNameSuffix;
     }
 
-    public void setOffsetNameSuffix(String offsetNameSuffix)
+    public void setOffsetNameSuffix( String offsetNameSuffix )
     {
         this.offsetNameSuffix = offsetNameSuffix;
     }
@@ -135,7 +135,7 @@ public class PortAllocation
         return nameLevelSeparator;
     }
 
-    public void setNameLevelSeparator(String nameLevelSeparator)
+    public void setNameLevelSeparator( String nameLevelSeparator )
     {
         this.nameLevelSeparator = nameLevelSeparator;
     }

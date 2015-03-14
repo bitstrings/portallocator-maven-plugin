@@ -52,14 +52,24 @@ limitations under the License.
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
+
                             <portAllocations>
+
                                 <portAllocation>
                                     <name>tomcat</name>
                                 </portAllocation>
+
                                 <portAllocation>
                                     <preferredPorts>8090</preferredPorts>
                                     <name>tomcat-preferred</name>
                                 </portAllocation>
+
+                                <portAllocation>
+                                    <preferredPorts>9000-10000</preferredPorts>
+                                    <name>tomcat-preferred-2</name>
+                                    <offsetBasePort>8080</offsetBasePort>
+                                </portAllocation>
+
                                 <portAllocation>
                                     <preferredPorts>8090</preferredPorts>
                                     <name>tomcat-2</name>
@@ -68,7 +78,9 @@ limitations under the License.
                                         <offset>10</offset>
                                     </relativePort>
                                 </portAllocation>
+
                             </portAllocations>
+
                         </configuration>
                     </execution>
                 </executions>

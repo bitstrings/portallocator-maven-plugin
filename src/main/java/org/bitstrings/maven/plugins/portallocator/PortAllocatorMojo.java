@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -67,7 +68,7 @@ public class PortAllocatorMojo
 
             try
             {
-                final String prefixName = ( portAllocation.getName() + portAllocation.getNameLevelSeparator() );
+                final String portName = portAllocation.getName();
 
                 portAllocatorBuilder.listener(
                     new PortAllocator.Listener()
@@ -104,12 +105,7 @@ public class PortAllocatorMojo
 
                                     if ( !Strings.isNullOrEmpty( rPortName ) )
                                     {
-                                        rProps.put(
-                                            prefixName
-                                                + rPortName
-                                                + portAllocation.getNameLevelSeparator()
-                                                + portAllocation.getPortNameSuffix(),
-                                            rPort );
+                                        rProps.put( rPortName, rPort );
                                     }
                                 }
 
@@ -130,18 +126,17 @@ public class PortAllocatorMojo
                                 {
                                     allocatedPorts.add( rEntry.getValue() );
 
-                                    mavenProject.getProperties()
-                                        .put( rEntry.getKey(), String.valueOf( rEntry.getValue() ) );
+                                    setAllocationProperty(
+                                            portAllocation,
+                                            rEntry.getValue(), portName,
+                                            rEntry.getKey() );
                                 }
                             }
                         }
                     }
                 );
 
-                mavenProject.getProperties().put(
-                        prefixName
-                            + portAllocation.getPortNameSuffix(),
-                        String.valueOf( portAllocatorBuilder.build().nextAvailablePort() ) );
+                setAllocationProperty( portAllocation, portAllocatorBuilder.build().nextAvailablePort(), portName );
             }
             catch ( Exception e )
             {
@@ -205,9 +200,31 @@ public class PortAllocatorMojo
                 {
                     builder.portRange(
                         lowest,
-                        Integer.parseInt( portRange.substring( rangeSepIndex ).trim() ) );
+                        Integer.parseInt( portRange.substring( rangeSepIndex + 1 ).trim() ) );
                 }
             }
+        }
+    }
+
+    protected String getPortPropertyName( PortAllocation portAllocation, String... levelNames )
+    {
+        return StringUtils.join( levelNames, portAllocation.getNameLevelSeparator() );
+    }
+
+    protected void setAllocationProperty( PortAllocation portAllocation, int port, String... levelNames )
+    {
+        final String portNamePrefix =
+                ( getPortPropertyName( portAllocation, levelNames ) + portAllocation.getNameLevelSeparator() );
+
+        mavenProject.getProperties().put(
+                portNamePrefix + portAllocation.getPortNameSuffix(),
+                String.valueOf( port ) );
+
+        if ( portAllocation.getOffsetBasePort() != null )
+        {
+            mavenProject.getProperties().put(
+                portNamePrefix + portAllocation.getOffsetNameSuffix(),
+                String.valueOf( port - portAllocation.getOffsetBasePort() ) );
         }
     }
 }
