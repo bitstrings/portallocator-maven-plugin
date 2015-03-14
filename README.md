@@ -15,5 +15,4 @@ Example - Simple port assignment
 
 ### Result:
 
-| --- |
 | `tomcat.port = 8090` |
