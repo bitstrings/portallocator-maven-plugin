@@ -10,10 +10,10 @@ import java.util.List;
 
 public class PortAllocator
 {
-    private static final int LOWEST_PORT_DEFAULT = 0x0400;
-    private static final int HIGHEST_PORT_DEFAULT = 0xFFFF;
+    public static final int LOWEST_PORT_DEFAULT = 0x0400;
+    public static final int HIGHEST_PORT_DEFAULT = 0xFFFF;
 
-    private static final int PORT_NA = -1;
+    public static final int PORT_NA = -1;
 
     public static class Builder
     {
