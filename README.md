@@ -25,6 +25,8 @@ Goal `allocate`
 | nameLevelSeparator | String | 1.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 1.0 | The port name suffix.<br/>**Default:** `port` |
 | offsetNameSuffix | String | 1.0 | The offset name suffix.<br/>**Default:** `offset` |
+| relativePorts | list | 1.0 | Extra ports relative to the preferred allocated port. |
+
 
 Example - Plugin execution
 --------------------------
@@ -50,6 +52,7 @@ Example - Plugin execution
 </plugin>
 ```
 
+
 Example - Simple port assignment
 --------------------------------
 ```xml
@@ -69,6 +72,7 @@ This is the simplest way you can assign a port. The default preferred port is 80
 tomcat.port = 8090
 ```
 
+
 Example - Port offset assignment
 --------------------------------
 ```xml
@@ -82,7 +86,7 @@ Example - Port offset assignment
 </configuration>
 ```
 
-When you set *offsetBasePort* a new "offset" property will be assigned the offset between the allocated port and the base port.
+When you set `offsetBasePort` a new "offset" property will be assigned the offset between the allocated port and the base port.
 
 #### Result might be:
 ```
@@ -119,4 +123,39 @@ Example - Port range
         </portAllocation>
     </portAllocations>
 </configuration>
+```
+
+Setting `depletionAction` to `fail` makes sure only the preferred ports can be allocated.
+
+
+Example - Relative ports
+------------------------
+```xml
+<configuration>
+    <portAllocations>
+        <portAllocation>
+            <name>tomcat</name>
+            <relativePort>
+                <name>jndi</name>
+                <offset>5</offset>
+            </relativePort>
+        </portAllocation>
+    </portAllocations>
+</configuration>
+```
+
+Note that all relative ports are checked for availability.
+
+#### Result might be:
+```
+tomcat.port = 8090
+tomcat.jndi.port = 8095
+```
+
+If the port `8095` is not available.
+
+#### If the port `8095` is not available, result might be:
+```
+tomcat.port = 8091
+tomcat.jndi.port = 8096
 ```
