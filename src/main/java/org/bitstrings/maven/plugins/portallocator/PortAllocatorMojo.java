@@ -94,7 +94,7 @@ public class PortAllocatorMojo
                                     try
                                     {
                                         if ( new PortAllocator.Builder()
-                                                    .port(rPort).build()
+                                                    .port( rPort ).build()
                                                     .nextAvailablePort() == PortAllocator.PORT_NA )
                                         {
                                             return false;
