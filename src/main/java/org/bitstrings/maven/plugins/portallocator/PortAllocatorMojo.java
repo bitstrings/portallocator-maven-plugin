@@ -2,6 +2,7 @@ package org.bitstrings.maven.plugins.portallocator;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,10 +17,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.bitstrings.maven.plugins.portallocator.PortAllocation.RelativePort;
 
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 
 @Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresOnline = false )
 public class PortAllocatorMojo
@@ -40,9 +39,19 @@ public class PortAllocatorMojo
     @Parameter
     private Ports ports;
 
+    @Parameter( defaultValue = PORT_NAME_SUFFIX_DEFAULT )
+    private String portNameSuffix;
+
+    @Parameter( defaultValue = OFFSET_NAME_SUFFIX_DEFAULT )
+    private String offsetNameSuffix;
+
+    @Parameter( defaultValue = NAME_SEPARATOR_DEFAULT )
+    private String nameSeparator;
+
     private static final String PREFERRED_PORTS_DEFAULT = "8090";
     private static final String PORT_NAME_SUFFIX_DEFAULT = "port";
     private static final String OFFSET_NAME_SUFFIX_DEFAULT = "port-offset";
+    private static final String NAME_SEPARATOR_DEFAULT = ".";
     private static final String PORT_ALLOCATOR_DEFAULT_ID = "default";
 
     private static final Set<Integer> allocatedPorts = new HashSet<>();
@@ -52,103 +61,31 @@ public class PortAllocatorMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
-        for ( PortAllocator portAllocator : portAllocators )
+        try
         {
-            final PortAllocatorService pas = buildPortAllocatorService( portAllocator );
-
-            portAllocatorServiceMap.put( portAllocator.getId(), pas );
-        }
-
-        if ( ports != null )
-        {
-            PortAllocatorService pas =
-                ports.getPortAllocator() == null
-                        ? buildPortAllocatorService( ports.getPortAllocator() )
-                        : portAllocatorServiceMap.get( ports.getPortAllocatorRef() );
-
-            for ( Port port : ports.getPorts() )
+            for ( PortAllocator portAllocator : portAllocators )
             {
+                final PortAllocatorService pas = buildPortAllocatorService( portAllocator );
+
+                portAllocatorServiceMap.put( portAllocator.getId(), pas );
+            }
+
+            if ( ports != null )
+            {
+                PortAllocatorService pas =
+                    ports.getPortAllocator() == null
+                            ? buildPortAllocatorService( ports.getPortAllocator() )
+                            : portAllocatorServiceMap.get( ports.getPortAllocatorRef() );
+
+                for ( Port port : ports.getPorts() )
+                {
+                    allocatePort( pas, port );
+                }
             }
         }
-
-        for ( final PortAllocation portAllocation : portAllocations )
+        catch ( Exception e )
         {
-            try
-            {
-                final String portName = portAllocation.getName();
-
-                portAllocatorBuilder.listener(
-                    new PortAllocatorService.Listener()
-                    {
-                        private final Map<String, Integer> rProps = new HashMap<>();
-
-                        @Override
-                        public boolean beforeAllocation( int potentialPort )
-                        {
-                            synchronized ( allocatedPorts )
-                            {
-                                if ( allocatedPorts.contains( potentialPort ) )
-                                {
-                                    return false;
-                                }
-
-
-                                for ( RelativePort relativePort : portAllocation.getRelativePorts() )
-                                {
-                                    final String rPortName = relativePort.getName();
-                                    final int rOffset = relativePort.getOffset();
-                                    final int rPort = ( potentialPort + rOffset );
-
-                                    try
-                                    {
-                                        if ( new PortAllocatorService.Builder()
-                                                    .port( rPort ).build()
-                                                    .nextAvailablePort() == PortAllocatorService.PORT_NA )
-                                        {
-                                            return false;
-                                        }
-                                    }
-                                    catch ( Exception e ) {}
-
-                                    if ( !Strings.isNullOrEmpty( rPortName ) )
-                                    {
-                                        rProps.put( rPortName, rPort );
-                                    }
-                                }
-
-                                return true;
-                            }
-                        }
-
-                        @Override
-                        public void afterAllocation( int port )
-                        {
-                            synchronized ( allocatedPorts )
-                            {
-                                allocatedPorts.add( port );
-
-                                mavenProject.getProperties().putAll( rProps );
-
-                                for ( Map.Entry<String, Integer> rEntry : rProps.entrySet() )
-                                {
-                                    allocatedPorts.add( rEntry.getValue() );
-
-                                    setAllocationProperty(
-                                            portAllocation,
-                                            rEntry.getValue(), portName,
-                                            rEntry.getKey() );
-                                }
-                            }
-                        }
-                    }
-                );
-
-                setAllocationProperty( portAllocation, portAllocatorBuilder.build().nextAvailablePort(), portName );
-            }
-            catch ( Exception e )
-            {
-                throw new MojoFailureException( e.getLocalizedMessage(), e );
-            }
+            throw new MojoFailureException( e.getLocalizedMessage(), e );
         }
     }
 
@@ -167,6 +104,29 @@ public class PortAllocatorMojo
         {
             addPortRanges( pasBuilder, portsCsv );
         }
+
+        pasBuilder.listener(
+            new PortAllocatorService.Listener()
+            {
+                @Override
+                public boolean beforeAllocation( int potentialPort )
+                {
+                    synchronized ( allocatedPorts )
+                    {
+                        return !allocatedPorts.contains( potentialPort );
+                    }
+                }
+
+                @Override
+                public void afterAllocation( int port )
+                {
+                    synchronized ( allocatedPorts )
+                    {
+                        allocatedPorts.add( port );
+                    }
+                }
+            }
+        );
 
         return pasBuilder.build();
     }
@@ -222,29 +182,30 @@ public class PortAllocatorMojo
         }
     }
 
-    protected String getPortPropertyName( PortAllocation portAllocation, String... levelNames )
+    protected String getPropertyName( String separator, String... names )
     {
-        return StringUtils.join( levelNames, portAllocation.getNameLevelSeparator() );
+        return StringUtils.join( names, separator );
     }
 
-    protected void setAllocationProperty( PortAllocation portAllocation, int port, String... levelNames )
+    protected void allocatePort( PortAllocatorService pas, Port portConfig )
+        throws IOException
     {
-        final String portNamePrefix =
-                ( getPortPropertyName( portAllocation, levelNames ) + portAllocation.getNameLevelSeparator() );
+        final String portNamePrefix = portConfig.getName();
+        final String portPropertyName = getPropertyName( nameSeparator, portNamePrefix, portNameSuffix );
 
-        final String portPropertyName = portNamePrefix + portAllocation.getPortNameSuffix();
+        final int allocatedPort = pas.nextAvailablePort();
 
-        mavenProject.getProperties().put( portPropertyName, String.valueOf( port ) );
+        mavenProject.getProperties().put( portPropertyName, String.valueOf( allocatedPort ) );
 
         if ( !quiet && getLog().isInfoEnabled() )
         {
-            getLog().info( "Assigning port [" + port + "] to property [" +  portPropertyName + "]" );
+            getLog().info( "Assigning port [" + allocatedPort + "] to property [" +  portPropertyName + "]" );
         }
 
-        if ( portAllocation.getOffsetBasePort() != null )
+        if ( portConfig.getOffsetBasePort() != null )
         {
-            final String offsetPropertyName = portNamePrefix + portAllocation.getOffsetNameSuffix();
-            final String offset = String.valueOf( port - portAllocation.getOffsetBasePort() );
+            final String offsetPropertyName = getPropertyName( nameSeparator, portNamePrefix, offsetNameSuffix );
+            final String offset = String.valueOf( allocatedPort - portConfig.getOffsetBasePort() );
 
             mavenProject.getProperties().put( offsetPropertyName, offset );
 
@@ -252,7 +213,7 @@ public class PortAllocatorMojo
             {
                 getLog().info(
                         "Assigning offset [" + offset + "] "
-                            + "from base port [" + portAllocation.getOffsetBasePort() + "] "
+                            + "from base port [" + portConfig.getOffsetBasePort() + "] "
                             + "to property [" +  offsetPropertyName + "]" );
             }
         }
