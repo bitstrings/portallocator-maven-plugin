@@ -33,16 +33,22 @@ public class PortAllocation
     public static class RelativePort
     {
         private String name;
-        private int offset;
+        private Integer offset;
+        private Integer basePort;
 
         public void setName( String name )
         {
             this.name = name;
         }
 
-        public void setOffset( int offset )
+        public void setOffset( Integer offset )
         {
             this.offset = offset;
+        }
+
+        public void setBasePort( Integer basePort )
+        {
+            this.basePort = basePort;
         }
 
         public String getName()
@@ -50,9 +56,14 @@ public class PortAllocation
             return name;
         }
 
-        public int getOffset()
+        public Integer getOffset()
         {
             return offset;
+        }
+
+        public Integer getBasePort()
+        {
+            return basePort;
         }
     }
 

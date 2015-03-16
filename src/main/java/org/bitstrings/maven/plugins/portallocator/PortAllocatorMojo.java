@@ -16,7 +16,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.bitstrings.maven.plugins.portallocator.PortAllocation.DepletionAction;
 import org.bitstrings.maven.plugins.portallocator.PortAllocation.RelativePort;
 
 import com.google.common.base.Splitter;
@@ -36,41 +35,50 @@ public class PortAllocatorMojo
     private boolean quiet;
 
     @Parameter
-    private List<PortAllocation> portAllocations;
+    private List<PortAllocator> portAllocators;
+
+    @Parameter
+    private Ports ports;
 
     private static final String PREFERRED_PORTS_DEFAULT = "8090";
     private static final String PORT_NAME_SUFFIX_DEFAULT = "port";
     private static final String OFFSET_NAME_SUFFIX_DEFAULT = "port-offset";
-    private static final String NAME_LEVEL_SEPARATOR_DEFAULT = ".";
+    private static final String PORT_ALLOCATOR_DEFAULT_ID = "default";
 
     private static final Set<Integer> allocatedPorts = new HashSet<>();
+    private static final Map<String, PortAllocatorService> portAllocatorServiceMap = new HashMap<>();
 
     @Override
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        for ( PortAllocator portAllocator : portAllocators )
+        {
+            final PortAllocatorService pas = buildPortAllocatorService( portAllocator );
+
+            portAllocatorServiceMap.put( portAllocator.getId(), pas );
+        }
+
+        if ( ports != null )
+        {
+            PortAllocatorService pas =
+                ports.getPortAllocator() == null
+                        ? buildPortAllocatorService( ports.getPortAllocator() )
+                        : portAllocatorServiceMap.get( ports.getPortAllocatorRef() );
+
+            for ( Port port : ports.getPorts() )
+            {
+            }
+        }
+
         for ( final PortAllocation portAllocation : portAllocations )
         {
-            initPortAllocation( portAllocation );
-
-            final PortAllocator.Builder portAllocatorBuilder = new PortAllocator.Builder();
-
-            if ( portAllocation.getDepletionAction() == PortAllocation.DepletionAction.CONTINUE )
-            {
-                portAllocatorBuilder.overflowPermitted();
-            }
-
-            for ( String portsCsv : portAllocation.getPreferredPorts().getPortsList() )
-            {
-                addPortRanges( portAllocatorBuilder, portsCsv );
-            }
-
             try
             {
                 final String portName = portAllocation.getName();
 
                 portAllocatorBuilder.listener(
-                    new PortAllocator.Listener()
+                    new PortAllocatorService.Listener()
                     {
                         private final Map<String, Integer> rProps = new HashMap<>();
 
@@ -93,9 +101,9 @@ public class PortAllocatorMojo
 
                                     try
                                     {
-                                        if ( new PortAllocator.Builder()
+                                        if ( new PortAllocatorService.Builder()
                                                     .port( rPort ).build()
-                                                    .nextAvailablePort() == PortAllocator.PORT_NA )
+                                                    .nextAvailablePort() == PortAllocatorService.PORT_NA )
                                         {
                                             return false;
                                         }
@@ -144,40 +152,49 @@ public class PortAllocatorMojo
         }
     }
 
-    protected void initPortAllocation( PortAllocation portAllocation )
+    protected PortAllocatorService buildPortAllocatorService( PortAllocator portAllocator )
     {
-        if ( portAllocation.getDepletionAction() == null )
+        initPortAllocator( portAllocator );
+
+        final PortAllocatorService.Builder pasBuilder = new PortAllocatorService.Builder();
+
+        if ( portAllocator.getDepletionAction() == PortAllocator.DepletionAction.CONTINUE )
         {
-            portAllocation.setDepletionAction( DepletionAction.CONTINUE );
+            pasBuilder.overflowPermitted();
         }
 
-        if ( portAllocation.getPreferredPorts() == null )
+        for ( String portsCsv : portAllocator.getPreferredPorts().getPortsList() )
         {
-            portAllocation.setPreferredPorts( new PortAllocation.PreferredPorts() );
+            addPortRanges( pasBuilder, portsCsv );
         }
 
-        if ( portAllocation.getPreferredPorts().getPortsList().isEmpty() )
+        return pasBuilder.build();
+    }
+
+    protected void initPortAllocator( PortAllocator portAllocator )
+    {
+        if ( portAllocator.getDepletionAction() == null )
         {
-            portAllocation.getPreferredPorts().addPorts( PREFERRED_PORTS_DEFAULT );
+            portAllocator.setDepletionAction( PortAllocator.DepletionAction.CONTINUE );
         }
 
-        if ( portAllocation.getPortNameSuffix() == null )
+        if ( portAllocator.getPreferredPorts() == null )
         {
-            portAllocation.setPortNameSuffix( PORT_NAME_SUFFIX_DEFAULT );
+            portAllocator.setPreferredPorts( new PortAllocator.PreferredPorts() );
         }
 
-        if ( portAllocation.getOffsetNameSuffix() == null )
+        if ( portAllocator.getPreferredPorts().getPortsList().isEmpty() )
         {
-            portAllocation.setOffsetNameSuffix( OFFSET_NAME_SUFFIX_DEFAULT );
+            portAllocator.getPreferredPorts().addPorts( PREFERRED_PORTS_DEFAULT );
         }
 
-        if ( portAllocation.getNameLevelSeparator() == null )
+        if ( portAllocator.getId() == null )
         {
-            portAllocation.setNameLevelSeparator( NAME_LEVEL_SEPARATOR_DEFAULT );
+            portAllocator.setId( PORT_ALLOCATOR_DEFAULT_ID );
         }
     }
 
-    protected void addPortRanges( PortAllocator.Builder builder, String portsCsv )
+    protected void addPortRanges( PortAllocatorService.Builder builder, String portsCsv )
     {
         for ( String portRange : Splitter.on( ',' ).trimResults().omitEmptyStrings().split( portsCsv ) )
         {

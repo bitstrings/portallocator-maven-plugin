@@ -1,234 +1,66 @@
 package org.bitstrings.maven.plugins.portallocator;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PortAllocator
 {
-    public static final int LOWEST_PORT_DEFAULT = 0x0400;
-    public static final int HIGHEST_PORT_DEFAULT = 0xFFFF;
-
-    public static final int PORT_NA = -1;
-
-    public static class Builder
+    public static class PreferredPorts
     {
-        private final List<PortRange> portRanges = new LinkedList<>();
-        private boolean overflowPermitted;
-        private final List<Listener> listeners = new LinkedList<>();
+        private final List<String> portsList = new LinkedList<>();
 
-        public Builder overflowPermitted()
+        public void addPorts( String ports )
         {
-            overflowPermitted = true;
-
-            return this;
+            portsList.add( ports );
         }
 
-        public Builder port( int port )
+        public void set( String ports )
         {
-            portRanges.add( new PortRange( port ) );
-
-            return this;
+            portsList.add( ports );
         }
 
-        public Builder portFrom( int lowest )
+        public List<String> getPortsList()
         {
-            portRanges.add( new PortRange( lowest, HIGHEST_PORT_DEFAULT ) );
-
-            return this;
-        }
-
-        public Builder portRange( int lowest, int highest )
-            throws IllegalArgumentException
-        {
-            portRanges.add( new PortRange( lowest, highest ) );
-
-            return this;
-        }
-
-        public Builder listener( Listener listener )
-        {
-            listeners.add( listener );
-
-            return this;
-        }
-
-        public PortAllocator build()
-        {
-            return new PortAllocator( overflowPermitted, portRanges, listeners );
+            return portsList;
         }
     }
 
-    public static interface Listener
+    public static enum DepletionAction
     {
-        boolean beforeAllocation( int potentialPort );
-        void afterAllocation( int port );
+        CONTINUE, FAIL;
     }
 
-    public static class PortRange
+    private String id;
+    private PreferredPorts preferredPorts;
+    private DepletionAction depletionAction;
+
+    public String getId()
     {
-        private int lowest;
-        private int highest;
-
-        private int next;
-
-        private boolean wrapAround;
-
-        public PortRange( int port )
-        {
-            this( port, port );
-        }
-
-        public PortRange( int lowest, int highest )
-            throws IllegalArgumentException
-        {
-            this( lowest, highest, lowest, false );
-        }
-
-        public PortRange( int lowest, int highest, int start, boolean wrapAround )
-            throws IllegalArgumentException
-        {
-            this.lowest = lowest;
-            this.highest = highest;
-
-            if ( ( highest < lowest ) || ( lowest < 0 ) )
-            {
-                throw new IllegalArgumentException( "Range must be valid, i.e.: lowest >= 0 and lowest <= highest." );
-            }
-
-            this.next = start;
-
-            this.wrapAround = wrapAround;
-        }
-
-        public int getLowest()
-        {
-            return lowest;
-        }
-
-        public int getHighest()
-        {
-            return highest;
-        }
-
-        public int nextPort()
-        {
-            if ( next > highest )
-            {
-                next = ( wrapAround ? lowest : PORT_NA );
-            }
-
-            try
-            {
-                return next;
-            }
-            finally
-            {
-                ++next;
-            }
-        }
+        return id;
     }
 
-    private final List<PortRange> portRanges = new ArrayList<>();
-    private final Iterator<PortRange> portRangesIterator;
-    private boolean overflowPermitted;
-    private PortRange lastPortRange;
-
-    private final List<Listener> listeners = new LinkedList<>();
-
-    public PortAllocator( boolean overflowPermitted, Collection<PortRange> portRanges, List<Listener> listeners )
+    public void setId( String id )
     {
-        if ( ( portRanges == null ) || portRanges.isEmpty() )
-        {
-            portRanges.add( new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, LOWEST_PORT_DEFAULT, true ) );
-        }
-        else
-        {
-            this.portRanges.addAll( portRanges );
-        }
-
-        this.overflowPermitted = overflowPermitted;
-
-        this.portRangesIterator = portRanges.iterator();
-
-        this.lastPortRange = portRangesIterator.next();
-
-        if ( listeners != null )
-        {
-            this.listeners.addAll( listeners );
-        }
+        this.id = id;
     }
 
-    public boolean isOverflowPermitted()
+    public PreferredPorts getPreferredPorts()
     {
-        return overflowPermitted;
+        return preferredPorts;
     }
 
-    public int nextAvailablePort()
-        throws IOException
+    public void setPreferredPorts( PreferredPorts preferredPorts )
     {
-        int port;
-        int lastPort = LOWEST_PORT_DEFAULT;
-
-        do
-        {
-            while ( ( port = lastPortRange.nextPort() ) == PORT_NA )
-            {
-                if ( portRangesIterator.hasNext() )
-                {
-                    lastPortRange = portRangesIterator.next();
-                }
-                else if ( overflowPermitted )
-                {
-                    lastPortRange = new PortRange( LOWEST_PORT_DEFAULT, HIGHEST_PORT_DEFAULT, lastPort, true );
-                }
-                else
-                {
-                    return PORT_NA;
-                }
-            }
-
-            lastPort = port;
-
-            for ( Listener l : listeners )
-            {
-                if ( !l.beforeAllocation( port ) )
-                {
-                    port = PORT_NA;
-
-                    break;
-                }
-            }
-        }
-        while ( ( port == PORT_NA ) || !isPortAvail( port ) );
-
-        for ( Listener l : listeners )
-        {
-            l.afterAllocation( port );
-        }
-
-        return port;
+        this.preferredPorts = preferredPorts;
     }
 
-    protected boolean isPortAvail( final int port )
-        throws IOException
+    public DepletionAction getDepletionAction()
     {
-        ServerSocket server;
-        try
-        {
-            server = new ServerSocket( port );
-        }
-        catch (IOException e)
-        {
-            return false;
-        }
+        return depletionAction;
+    }
 
-        server.close();
-
-        return true;
+    public void setDepletionAction( DepletionAction depletionAction )
+    {
+        this.depletionAction = depletionAction;
     }
 }

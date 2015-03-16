@@ -1,3 +1,23 @@
+
+```xml
+<portAllocators>
+    <portAllocator>
+        <id></id>
+        <preferredPorts/>
+        <depletionAction/>
+    <portAllocator>
+</portAllocators>
+
+<ports>
+    <portAllocatorRef/> | <portAllocator/>
+
+    <port>
+        <name></name>
+        <offsetBasePort/>
+    </port>
+</ports>
+```
+
 portallocator-maven-plugin
 ==========================
 
