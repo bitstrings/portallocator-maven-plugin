@@ -55,29 +55,9 @@ limitations under the License.
 
                             <portAllocations>
 
-                                <portAllocation>
+                                <ports>
                                     <name>tomcat</name>
-                                </portAllocation>
-
-                                <portAllocation>
-                                    <preferredPorts>8090</preferredPorts>
-                                    <name>tomcat-preferred</name>
-                                </portAllocation>
-
-                                <portAllocation>
-                                    <preferredPorts>9000-10000</preferredPorts>
-                                    <name>tomcat-preferred-2</name>
-                                    <offsetBasePort>8080</offsetBasePort>
-                                </portAllocation>
-
-                                <portAllocation>
-                                    <preferredPorts>8090</preferredPorts>
-                                    <name>tomcat-2</name>
-                                    <relativePort>
-                                        <name>jndi</name>
-                                        <offset>10</offset>
-                                    </relativePort>
-                                </portAllocation>
+                                </ports>
 
                             </portAllocations>
 

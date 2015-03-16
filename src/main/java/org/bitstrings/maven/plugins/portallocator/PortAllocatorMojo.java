@@ -1,5 +1,7 @@
 package org.bitstrings.maven.plugins.portallocator;
 
+import static com.google.common.base.MoreObjects.*;
+import static java.util.Collections.*;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
 import java.io.IOException;
@@ -54,8 +56,20 @@ public class PortAllocatorMojo
     private static final String NAME_SEPARATOR_DEFAULT = ".";
     private static final String PORT_ALLOCATOR_DEFAULT_ID = "default";
 
-    private static final Set<Integer> allocatedPorts = new HashSet<>();
-    private static final Map<String, PortAllocatorService> portAllocatorServiceMap = new HashMap<>();
+    private static final Set<Integer> allocatedPorts = synchronizedSet( new HashSet<Integer>() );
+    private static final Map<String, PortAllocatorService>
+                portAllocatorServiceMap =
+                    synchronizedMap( new HashMap<String, PortAllocatorService>() );
+
+    static
+    {
+        portAllocatorServiceMap.put(
+                PORT_ALLOCATOR_DEFAULT_ID,
+                new PortAllocatorService.Builder()
+                        .overflowPermitted()
+                        .port( Integer.valueOf( PREFERRED_PORTS_DEFAULT ) )
+                        .build() );
+    }
 
     @Override
     public void execute()
@@ -65,7 +79,7 @@ public class PortAllocatorMojo
         {
             for ( PortAllocator portAllocator : portAllocators )
             {
-                final PortAllocatorService pas = buildPortAllocatorService( portAllocator );
+                final PortAllocatorService pas = createPortAllocatorService( portAllocator );
 
                 portAllocatorServiceMap.put( portAllocator.getId(), pas );
             }
@@ -74,8 +88,9 @@ public class PortAllocatorMojo
             {
                 PortAllocatorService pas =
                     ports.getPortAllocator() == null
-                            ? buildPortAllocatorService( ports.getPortAllocator() )
-                            : portAllocatorServiceMap.get( ports.getPortAllocatorRef() );
+                            ? createPortAllocatorService( ports.getPortAllocator() )
+                            : portAllocatorServiceMap.get(
+                                    firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) );
 
                 for ( Port port : ports.getPorts() )
                 {
@@ -89,7 +104,7 @@ public class PortAllocatorMojo
         }
     }
 
-    protected PortAllocatorService buildPortAllocatorService( PortAllocator portAllocator )
+    protected PortAllocatorService createPortAllocatorService( PortAllocator portAllocator )
     {
         initPortAllocator( portAllocator );
 
@@ -111,19 +126,13 @@ public class PortAllocatorMojo
                 @Override
                 public boolean beforeAllocation( int potentialPort )
                 {
-                    synchronized ( allocatedPorts )
-                    {
-                        return !allocatedPorts.contains( potentialPort );
-                    }
+                    return !allocatedPorts.contains( potentialPort );
                 }
 
                 @Override
                 public void afterAllocation( int port )
                 {
-                    synchronized ( allocatedPorts )
-                    {
-                        allocatedPorts.add( port );
-                    }
+                    allocatedPorts.add( port );
                 }
             }
         );
