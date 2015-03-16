@@ -20,7 +20,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.google.common.base.Splitter;
 
-@Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresOnline = false )
+@Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresProject = true, requiresOnline = false )
 public class PortAllocatorMojo
     extends AbstractMojo
 {
