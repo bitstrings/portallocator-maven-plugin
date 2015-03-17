@@ -4,10 +4,15 @@ import static com.google.common.base.MoreObjects.*;
 import static java.util.Collections.*;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -49,6 +54,11 @@ public class PortAllocatorMojo
 
     @Parameter( defaultValue = NAME_SEPARATOR_DEFAULT )
     private String nameSeparator;
+
+    @Parameter
+    private File writePropertiesFile;
+
+    private final Properties execPorts = new Properties();
 
     private static final String PREFERRED_PORTS_DEFAULT = "8090";
     private static final String PORT_NAME_SUFFIX_DEFAULT = "port";
@@ -133,8 +143,21 @@ public class PortAllocatorMojo
 
                     ALLOCATION_LOCK.unlock();
                 }
-
             }
+
+            ALLOCATION_LOCK.lock();
+            if ( writePropertiesFile != null )
+            {
+                try (final Writer out = new BufferedWriter( new FileWriter( writePropertiesFile ) ) )
+                {
+                    execPorts.store( out, "" );
+                }
+                catch ( Exception e )
+                {
+                    throw new MojoExecutionException( "Problem writing ports file [" + writePropertiesFile + "]", e );
+                }
+            }
+            ALLOCATION_LOCK.unlock();
         }
         catch ( Exception e )
         {
@@ -243,6 +266,7 @@ public class PortAllocatorMojo
         final int allocatedPort = pas.nextAvailablePort();
 
         mavenProject.getProperties().put( portPropertyName, String.valueOf( allocatedPort ) );
+        execPorts.setProperty( portPropertyName, String.valueOf( allocatedPort ) );
 
         if ( !quiet && getLog().isInfoEnabled() )
         {
@@ -255,6 +279,7 @@ public class PortAllocatorMojo
             final String offset = String.valueOf( allocatedPort - portConfig.getOffsetBasePort() );
 
             mavenProject.getProperties().put( offsetPropertyName, offset );
+            execPorts.setProperty( offsetPropertyName, offset );
 
             if ( !quiet && getLog().isInfoEnabled() )
             {
