@@ -4,7 +4,6 @@ import static com.google.common.base.MoreObjects.*;
 import static java.util.Collections.*;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,6 +60,7 @@ public class PortAllocatorMojo
     private static final Map<String, PortAllocatorService>
                 portAllocatorServiceMap =
                     synchronizedMap( new HashMap<String, PortAllocatorService>() );
+
     private static final ReentrantLock PORT_ALLOCATION_LOCK = new ReentrantLock();
 
     static
@@ -86,16 +86,28 @@ public class PortAllocatorMojo
 
             if ( ports != null )
             {
+                if ( ( ports.getPortAllocatorRef() != null ) && ( ports.getPortAllocator() != null ) )
+                {
+                    throw new MojoFailureException(
+                        "Either use a port allocator reference or define an inner allocator but you can use both." );
+                }
+
                 PortAllocatorService pas =
                     ports.getPortAllocator() == null
                             ? portAllocatorServiceMap.get(
                                     firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) )
                             : createPortAllocatorService( ports.getPortAllocator() );
 
+
                 for ( Port port : ports.getPorts() )
                 {
+                    PORT_ALLOCATION_LOCK.lock();
+
                     allocatePort( pas, port );
+
+                    PORT_ALLOCATION_LOCK.unlock();
                 }
+
             }
         }
         catch ( Exception e )
@@ -126,8 +138,6 @@ public class PortAllocatorMojo
                 @Override
                 public boolean beforeAllocation( int potentialPort )
                 {
-                    PORT_ALLOCATION_LOCK.lock();
-
                     return !allocatedPorts.contains( potentialPort );
                 }
 
@@ -135,8 +145,6 @@ public class PortAllocatorMojo
                 public void afterAllocation( int port )
                 {
                     allocatedPorts.add( port );
-
-                    PORT_ALLOCATION_LOCK.unlock();
                 }
             }
         );
@@ -201,7 +209,7 @@ public class PortAllocatorMojo
     }
 
     protected void allocatePort( PortAllocatorService pas, Port portConfig )
-        throws IOException
+        throws Exception
     {
         final String portNamePrefix = portConfig.getName();
         final String portPropertyName = getPropertyName( nameSeparator, portNamePrefix, portNameSuffix );
