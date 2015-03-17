@@ -6,7 +6,7 @@ portallocator-maven-plugin
 
 ### Description
 
-The port allocator plugin finds an available port and makes sure they are unique for a Maven execution.
+The port allocator plugin finds an available port and makes sure it is unique for the Maven execution.
 
 Goal `allocate`
 ---------------
