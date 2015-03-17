@@ -46,28 +46,37 @@ limitations under the License.
                 <artifactId>@project.artifactId@</artifactId>
                 <executions>
                     <execution>
-                        <id>port-allocation</id>
+                        <id>portallocation-default</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
-
-                            <portAllocations>
-
-                                <portAllocation>
-                                    <name>tomcat</name>
-                                    <relativePort>
-                                        <name>rmi</name>
-                                        <offset>1</offset>
-                                    </relativePort>
-                                    <relativePort>
-                                        <name>jndi</name>
-                                        <offset>5</offset>
-                                    </relativePort>
-                                </portAllocation>
-
-                            </portAllocations>
-
+                            <ports>
+                                <port>
+                                    <name>tomcat-a1</name>
+                                </port>
+                                <port>
+                                    <name>tomcat-a2</name>
+                                </port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>portallocation-1</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration>
+                            <ports>
+                                <portAllocatorRef>portallocator-1</portAllocatorRef>
+                                <port>
+                                    <name>tomcat-pa1</name>
+                                </port>
+                                <port>
+                                    <name>tomcat-pa2</name>
+                                    <offsetBasePort>8080</offsetBasePort>
+                                </port>
+                            </ports>
                         </configuration>
                     </execution>
                 </executions>

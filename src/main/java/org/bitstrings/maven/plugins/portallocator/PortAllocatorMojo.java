@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.execution.MavenSession;
@@ -60,15 +61,11 @@ public class PortAllocatorMojo
     private static final Map<String, PortAllocatorService>
                 portAllocatorServiceMap =
                     synchronizedMap( new HashMap<String, PortAllocatorService>() );
+    private static final ReentrantLock PORT_ALLOCATION_LOCK = new ReentrantLock();
 
     static
     {
-        portAllocatorServiceMap.put(
-                PORT_ALLOCATOR_DEFAULT_ID,
-                new PortAllocatorService.Builder()
-                        .overflowPermitted()
-                        .port( Integer.valueOf( PREFERRED_PORTS_DEFAULT ) )
-                        .build() );
+        portAllocatorServiceMap.put( PORT_ALLOCATOR_DEFAULT_ID, createPortAllocatorService( new PortAllocator() ) );
     }
 
     @Override
@@ -77,20 +74,23 @@ public class PortAllocatorMojo
     {
         try
         {
-            for ( PortAllocator portAllocator : portAllocators )
+            if ( portAllocators != null )
             {
-                final PortAllocatorService pas = createPortAllocatorService( portAllocator );
+                for ( PortAllocator portAllocator : portAllocators )
+                {
+                    final PortAllocatorService pas = createPortAllocatorService( portAllocator );
 
-                portAllocatorServiceMap.put( portAllocator.getId(), pas );
+                    portAllocatorServiceMap.put( portAllocator.getId(), pas );
+                }
             }
 
             if ( ports != null )
             {
                 PortAllocatorService pas =
                     ports.getPortAllocator() == null
-                            ? createPortAllocatorService( ports.getPortAllocator() )
-                            : portAllocatorServiceMap.get(
-                                    firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) );
+                            ? portAllocatorServiceMap.get(
+                                    firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) )
+                            : createPortAllocatorService( ports.getPortAllocator() );
 
                 for ( Port port : ports.getPorts() )
                 {
@@ -104,7 +104,7 @@ public class PortAllocatorMojo
         }
     }
 
-    protected PortAllocatorService createPortAllocatorService( PortAllocator portAllocator )
+    protected static PortAllocatorService createPortAllocatorService( PortAllocator portAllocator )
     {
         initPortAllocator( portAllocator );
 
@@ -126,6 +126,8 @@ public class PortAllocatorMojo
                 @Override
                 public boolean beforeAllocation( int potentialPort )
                 {
+                    PORT_ALLOCATION_LOCK.lock();
+
                     return !allocatedPorts.contains( potentialPort );
                 }
 
@@ -133,6 +135,8 @@ public class PortAllocatorMojo
                 public void afterAllocation( int port )
                 {
                     allocatedPorts.add( port );
+
+                    PORT_ALLOCATION_LOCK.unlock();
                 }
             }
         );
@@ -140,7 +144,7 @@ public class PortAllocatorMojo
         return pasBuilder.build();
     }
 
-    protected void initPortAllocator( PortAllocator portAllocator )
+    protected static void initPortAllocator( PortAllocator portAllocator )
     {
         if ( portAllocator.getDepletionAction() == null )
         {
@@ -163,7 +167,7 @@ public class PortAllocatorMojo
         }
     }
 
-    protected void addPortRanges( PortAllocatorService.Builder builder, String portsCsv )
+    protected static void addPortRanges( PortAllocatorService.Builder builder, String portsCsv )
     {
         for ( String portRange : Splitter.on( ',' ).trimResults().omitEmptyStrings().split( portsCsv ) )
         {
@@ -191,7 +195,7 @@ public class PortAllocatorMojo
         }
     }
 
-    protected String getPropertyName( String separator, String... names )
+    protected static String getPropertyName( String separator, String... names )
     {
         return StringUtils.join( names, separator );
     }

@@ -137,6 +137,7 @@ public class PortAllocatorService
     private final Iterator<PortRange> portRangesIterator;
     private boolean overflowPermitted;
     private PortRange lastPortRange;
+    private int lastPort;
 
     private final List<Listener> listeners = new LinkedList<>();
 
@@ -156,6 +157,7 @@ public class PortAllocatorService
         this.portRangesIterator = portRanges.iterator();
 
         this.lastPortRange = portRangesIterator.next();
+        this.lastPort = LOWEST_PORT_DEFAULT;
 
         if ( listeners != null )
         {
@@ -172,7 +174,6 @@ public class PortAllocatorService
         throws IOException
     {
         int port;
-        int lastPort = LOWEST_PORT_DEFAULT;
 
         do
         {

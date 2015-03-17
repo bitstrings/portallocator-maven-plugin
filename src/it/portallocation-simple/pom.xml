@@ -47,20 +47,46 @@ limitations under the License.
                 <version>@project.version@</version>
                 <executions>
                     <execution>
-                        <id>port-allocation</id>
+                        <id>port-simple</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
-
-                            <portAllocations>
-
-                                <ports>
+                            <ports>
+                                <port>
                                     <name>tomcat</name>
-                                </ports>
-
-                            </portAllocations>
-
+                                </port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>port-preferred</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration>
+                            <ports>
+                                <portAllocator>
+                                    <preferredPorts>8100</preferredPorts>
+                                </portAllocator>
+                                <port>
+                                    <name>tomcat-preferred</name>
+                                </port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>port-offset</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration>
+                            <ports>
+                                <port>
+                                    <name>tomcat-2</name>
+                                    <offsetBasePort>8080</offsetBasePort>
+                                </port>
+                            </ports>
                         </configuration>
                     </execution>
                 </executions>

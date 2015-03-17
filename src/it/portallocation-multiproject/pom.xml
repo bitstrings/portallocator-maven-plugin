@@ -40,16 +40,15 @@ limitations under the License.
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
                 <configuration>
-
-                    <portAllocations>
-
-                        <portAllocation>
+                    <portAllocators>
+                        <portAllocator>
                             <preferredPorts>9090</preferredPorts>
-                            <offsetBasePort>8080</offsetBasePort>
-                        </portAllocation>
-
-                    </portAllocations>
-
+                        </portAllocator>
+                        <portAllocator>
+                            <id>portallocator-1</id>
+                            <preferredPorts>9191-9292</preferredPorts>
+                        </portAllocator>
+                    </portAllocators>
                 </configuration>
             </plugin>
         </plugins>
