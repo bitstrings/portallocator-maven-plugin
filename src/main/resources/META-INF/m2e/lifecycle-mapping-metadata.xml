@@ -2,17 +2,17 @@
 
 <lifecycleMappingMetadata>
 
-<pluginExecutions>
-    <pluginExecution>
-        <pluginExecutionFilter>
-            <goals>
-                <goal>allocate</goal>
-            </goals>
-        </pluginExecutionFilter>
-        <action>
-            <ignore/>
-        </action>
-    </pluginExecution>
-</pluginExecutions>
+    <pluginExecutions>
+        <pluginExecution>
+            <pluginExecutionFilter>
+                <goals>
+                    <goal>allocate</goal>
+                </goals>
+            </pluginExecutionFilter>
+            <action>
+                <ignore/>
+           </action>
+        </pluginExecution>
+    </pluginExecutions>
 
 </lifecycleMappingMetadata>

@@ -146,8 +146,16 @@ public class PortAllocatorMojo
             }
 
             ALLOCATION_LOCK.lock();
+
             if ( writePropertiesFile != null )
             {
+                final File parent = writePropertiesFile.getParentFile();
+
+                if ( ( parent != null ) && !parent.exists() )
+                {
+                    parent.mkdirs();
+                }
+
                 try (final Writer out = new BufferedWriter( new FileWriter( writePropertiesFile ) ) )
                 {
                     if ( !quiet && getLog().isInfoEnabled() )
@@ -162,6 +170,7 @@ public class PortAllocatorMojo
                     throw new MojoExecutionException( "Problem writing ports file [" + writePropertiesFile + "]", e );
                 }
             }
+
             ALLOCATION_LOCK.unlock();
         }
         catch ( Exception e )
