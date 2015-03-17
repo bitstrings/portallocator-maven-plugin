@@ -61,11 +61,15 @@ public class PortAllocatorMojo
                 portAllocatorServiceMap =
                     synchronizedMap( new HashMap<String, PortAllocatorService>() );
 
-    private static final ReentrantLock PORT_ALLOCATION_LOCK = new ReentrantLock();
+    private static final ReentrantLock ALLOCATION_LOCK = new ReentrantLock();
+
+    private static final PortAllocatorService PORT_ALLOCATOR_SERVICE_DEFAULT;
 
     static
     {
-        portAllocatorServiceMap.put( PORT_ALLOCATOR_DEFAULT_ID, createPortAllocatorService( new PortAllocator() ) );
+        portAllocatorServiceMap.put(
+                PORT_ALLOCATOR_DEFAULT_ID,
+                PORT_ALLOCATOR_SERVICE_DEFAULT = createPortAllocatorService( new PortAllocator() ) );
     }
 
     @Override
@@ -80,7 +84,24 @@ public class PortAllocatorMojo
                 {
                     final PortAllocatorService pas = createPortAllocatorService( portAllocator );
 
-                    portAllocatorServiceMap.put( portAllocator.getId(), pas );
+                    ALLOCATION_LOCK.lock();
+
+                    final PortAllocatorService existingPas = portAllocatorServiceMap.get( portAllocator.getId() );
+
+                    if ( portAllocator.isPermitOverride()
+                            || ( existingPas == null )
+                            || ( portAllocator.getId().equals( PORT_ALLOCATOR_DEFAULT_ID )
+                                    && ( existingPas == PORT_ALLOCATOR_SERVICE_DEFAULT ) ) )
+                    {
+                        portAllocatorServiceMap.put( portAllocator.getId(), pas );
+
+                        if ( !quiet && getLog().isInfoEnabled() )
+                        {
+                            getLog().info( "Registering port allocator [" + portAllocator.getId() + "]");
+                        }
+                    }
+
+                    ALLOCATION_LOCK.unlock();
                 }
             }
 
@@ -98,14 +119,19 @@ public class PortAllocatorMojo
                                     firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) )
                             : createPortAllocatorService( ports.getPortAllocator() );
 
+                if ( pas == null )
+                {
+                    throw new MojoFailureException(
+                        "Cannot find port allocator [" + ports.getPortAllocatorRef() + "]" );
+                }
 
                 for ( Port port : ports.getPorts() )
                 {
-                    PORT_ALLOCATION_LOCK.lock();
+                    ALLOCATION_LOCK.lock();
 
                     allocatePort( pas, port );
 
-                    PORT_ALLOCATION_LOCK.unlock();
+                    ALLOCATION_LOCK.unlock();
                 }
 
             }

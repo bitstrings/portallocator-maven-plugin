@@ -39,17 +39,25 @@ limitations under the License.
                 <groupId>@project.groupId@</groupId>
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
-                <configuration>
-                    <portAllocators>
-                        <portAllocator>
-                            <preferredPorts>9090</preferredPorts>
-                        </portAllocator>
-                        <portAllocator>
-                            <id>portallocator-1</id>
-                            <preferredPorts>9191-9292</preferredPorts>
-                        </portAllocator>
-                    </portAllocators>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>portallocator-global</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration>
+                            <portAllocators>
+                                <portAllocator>
+                                    <preferredPorts>9090</preferredPorts>
+                                </portAllocator>
+                                <portAllocator>
+                                    <id>portallocator-1</id>
+                                    <preferredPorts>9191-9292</preferredPorts>
+                                </portAllocator>
+                            </portAllocators>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

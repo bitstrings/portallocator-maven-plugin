@@ -33,6 +33,7 @@ public class PortAllocator
     private String id;
     private PreferredPorts preferredPorts;
     private DepletionAction depletionAction;
+    private boolean permitOverride;
 
     public String getId()
     {
@@ -62,5 +63,15 @@ public class PortAllocator
     public void setDepletionAction( DepletionAction depletionAction )
     {
         this.depletionAction = depletionAction;
+    }
+
+    public boolean isPermitOverride()
+    {
+        return permitOverride;
+    }
+
+    public void setPermitOverride( boolean permitOverride )
+    {
+        this.permitOverride = permitOverride;
     }
 }
