@@ -150,6 +150,11 @@ public class PortAllocatorMojo
             {
                 try (final Writer out = new BufferedWriter( new FileWriter( writePropertiesFile ) ) )
                 {
+                    if ( !quiet && getLog().isInfoEnabled() )
+                    {
+                        getLog().info( "Writing ports file [" + writePropertiesFile + "]");
+                    }
+
                     execPorts.store( out, "" );
                 }
                 catch ( Exception e )
