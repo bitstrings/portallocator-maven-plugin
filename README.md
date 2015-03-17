@@ -35,6 +35,8 @@ Goal `allocate`
 
 #### Tag `port`
 
+| name | type | Since | Description |
+| ---- | ---- | ----- | ----------- |
 | name | String | 2.0 | The first level name of the property. |
 | offsetBasePort | Integer | 2.0 | The base port for offset calculation. |
 
