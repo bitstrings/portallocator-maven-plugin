@@ -25,14 +25,14 @@ public class PortAllocator
         }
     }
 
-    public static enum DepletionAction
+    public static enum DepletedAction
     {
         CONTINUE, FAIL;
     }
 
     private String id;
     private PreferredPorts preferredPorts;
-    private DepletionAction depletionAction;
+    private DepletedAction depletedAction;
     private boolean permitOverride;
 
     public String getId()
@@ -55,14 +55,14 @@ public class PortAllocator
         this.preferredPorts = preferredPorts;
     }
 
-    public DepletionAction getDepletionAction()
+    public DepletedAction getDepletedAction()
     {
-        return depletionAction;
+        return depletedAction;
     }
 
-    public void setDepletionAction( DepletionAction depletionAction )
+    public void setDepletedAction( DepletedAction depletedAction )
     {
-        this.depletionAction = depletionAction;
+        this.depletedAction = depletedAction;
     }
 
     public boolean isPermitOverride()

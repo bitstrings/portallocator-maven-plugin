@@ -185,7 +185,7 @@ public class PortAllocatorMojo
 
         final PortAllocatorService.Builder pasBuilder = new PortAllocatorService.Builder();
 
-        if ( portAllocator.getDepletionAction() == PortAllocator.DepletionAction.CONTINUE )
+        if ( portAllocator.getDepletedAction() == PortAllocator.DepletedAction.CONTINUE )
         {
             pasBuilder.overflowPermitted();
         }
@@ -217,9 +217,9 @@ public class PortAllocatorMojo
 
     protected static void initPortAllocator( PortAllocator portAllocator )
     {
-        if ( portAllocator.getDepletionAction() == null )
+        if ( portAllocator.getDepletedAction() == null )
         {
-            portAllocator.setDepletionAction( PortAllocator.DepletionAction.CONTINUE );
+            portAllocator.setDepletedAction( PortAllocator.DepletedAction.CONTINUE );
         }
 
         if ( portAllocator.getPreferredPorts() == null )

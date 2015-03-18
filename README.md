@@ -26,6 +26,7 @@ Goal `allocate`
 | nameSeparator | String | 2.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port` |
 | offsetNameSuffix | String | 2.0 | The offset name suffix.<br/>**Default:** `port-offset` |
+| writePropertiesFile | File | 2.0 | The properties file. |
 | quiet | Boolean | 1.0 | Set to `true` for no output. |
 
 #### Tag `portAllocator`
@@ -34,7 +35,8 @@ Goal `allocate`
 | ---- | ---- | ----- | ----------- |
 | id | String | 2.0 | The port allocator id then can be referenced. |
 | preferredPorts | List | 2.0 | The preferred ports.<br/>**Default:** `8090` |
-| depletionAction | String | 2.0 | The action to take if preferred ports are depleted.<br/>**Values:** `continue` or `fail`<br/>**Default:** `continue`  |
+| depletedAction | String | 2.0 | The action to take if preferred ports are depleted.<br/>**Values:** `continue` or `fail`<br/>**Default:** `continue`  |
+| permitOverride | Boolean | 2.0 | By default allocators can not be overridden.<br/>This is useful for multi-module projects.<br/>**Default:** `false` |
 
 #### Tag `port`
 
@@ -74,9 +76,7 @@ Example - Simplest way
 ```xml
 <configuration>
     <ports>
-        <port>
-            <name>tomcat</name>
-        </port>
+        <port>tomcat</port>
     </ports>
 </configuration>
 ```
@@ -87,3 +87,50 @@ This is the simplest way you can assign a port. The default preferred port is 80
 ```
 tomcat.port = 8090
 ```
+
+
+Example - Write the ports to a properties file
+----------------------------------------------
+```xml
+<configuration>
+    <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
+    <ports>
+        <port>tomcat</port>
+        <port>hsqldb</port>
+    </ports>
+</configuration>
+```
+
+
+Example - Register a port allocator
+-----------------------------------
+```xml
+<configuration>
+    <portAllocators>
+        <portAllocator>
+            <preferredPorts>9090</preferredPorts>
+        </portAllocator>
+    </portAllocators>
+</configuration>
+```
+
+Two things:
+
+1. Unless you set `permitOverride` to `true`, you can register port allocators in the parent without worrying about re-registering in child modules.
+2. The can override the default allocator by using `<id>default</id>` or omit the id.
+
+```xml
+<configuration>
+    <portAllocators>
+        <portAllocator>
+            <id>pool-1</id>
+            <preferredPorts>
+                <ports>8080-9090</ports>
+                <depletedAction>fail</depletedAction>
+            </preferredPorts>
+        </portAllocator>
+    </portAllocators>
+</configuration>
+```
+
+This allocator will try to assign ports from `8080` to `9090`, otherwise fail.
