@@ -22,7 +22,7 @@ Goal `allocate`
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | portAllocators | List | 2.0 | List of port allocators. |
-| ports | List | 2.0 | List of ports. |
+| ports | Ports | 2.0 | List of ports. |
 | nameSeparator | String | 2.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port` |
 | offsetNameSuffix | String | 2.0 | The offset name suffix.<br/>**Default:** `port-offset` |
@@ -38,13 +38,23 @@ Goal `allocate`
 | depletedAction | String | 2.0 | The action to take if preferred ports are depleted.<br/>**Values:** `continue` or `fail`<br/>**Default:** `continue`  |
 | permitOverride | Boolean | 2.0 | By default allocators can not be overridden.<br/>This is useful for multi-module projects.<br/>**Default:** `false` |
 
+#### Tag - ports
+
+| name | type | Since | Description |
+| ---- | ---- | ----- | ----------- |
+| portAllocatorRef | String | 2.0 | The port allocator reference.<br/>**Default:** `default`<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
+| portAllocator | PortAllocator | 2.0 | Inner port allocator.<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
+| port | Port | 2.0 | The port to assign. |
+
 #### Tag `port`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | name | String | 2.0 | The first level name of the property. |
-| offsetBasePort | Integer | 2.0 | The base port for offset calculation. |
+| offsetBasePort | Integer | 2.0 | The base port for offset calculation.<br/>This will set a second property with the suffix `offsetNameSuffix`. |
 
+
+portAllocatorRef
 
 Example - Plugin execution
 --------------------------
@@ -134,3 +144,18 @@ Two things:
 ```
 
 This allocator will try to assign ports from `8080` to `9090`, otherwise fail.
+
+```xml
+<configuration>
+    <ports>
+        <portAllocatorRef>pool-1</portAllocatorRef>
+        <port>
+            <name>wildfly</name>
+            <offsetBasePort>8080</offsetBasePort>
+        </port>
+        <port>hsqldb</port>
+    </ports>
+</configuration>
+```
+
+Use the `pool-1` port allocator.
