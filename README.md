@@ -1,5 +1,5 @@
-| **NOTE:** There's is also a 1.x version of this plugin but it's has a very different configuration. |
-|-----------------------------------------------------------------------------------------------------|
+| **NOTE:** There's is also a 1.x version of this plugin but it has a very different configuration. |
+|---------------------------------------------------------------------------------------------------|
 
 portallocator-maven-plugin
 ==========================
