@@ -99,6 +99,24 @@ tomcat.port = 8090
 ```
 
 
+Example - Get offset relative to a base port
+--------------------------------------------
+```xml
+<configuration>
+    <port>
+        <name>wildfly</name>
+        <offsetBasePort>8080</offsetBasePort>
+    </port>
+</configuration>
+```
+
+#### Result might be or any other port depending on availability:
+```
+tomcat.port = 8090
+tomcat.port-offset = 10
+```
+
+
 Example - Write the ports to a properties file
 ----------------------------------------------
 ```xml
