@@ -112,8 +112,8 @@ Example - Get offset relative to a base port
 
 #### Result might be or any other port depending on availability:
 ```
-tomcat.port = 8090
-tomcat.port-offset = 10
+wildfly.port = 8090
+wildfly.port-offset = 10
 ```
 
 
