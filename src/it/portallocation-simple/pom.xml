@@ -39,7 +39,6 @@ limitations under the License.
             <plugin>
                 <groupId>@project.groupId@</groupId>
                 <artifactId>@project.artifactId@</artifactId>
-                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>port-simplest</id>

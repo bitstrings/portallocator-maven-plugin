@@ -23,28 +23,22 @@ limitations under the License.
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
+    <parent>
+        <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
+        <artifactId>portallocation-parent-it</artifactId>
+        <version>1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
     <artifactId>portallocation-writefile-it</artifactId>
-    <version>1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <build>
-        <resources>
-            <resource>
-                <directory>resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>@project.groupId@</groupId>
                 <artifactId>@project.artifactId@</artifactId>
-                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>port-simple</id>
