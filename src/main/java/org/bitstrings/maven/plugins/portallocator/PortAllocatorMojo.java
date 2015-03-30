@@ -153,7 +153,7 @@ public class PortAllocatorMojo
                         getLog().info( "Writing ports file [" + writePropertiesFile + "]");
                     }
 
-                    execPorts.store( out, "" );
+                    execPorts.store( out, null );
                 }
                 catch ( Exception e )
                 {
