@@ -291,7 +291,7 @@ public class PortAllocatorMojo
             {
                 getLog().info(
                         "Assigning offset [" + offset + "] "
-                            + "from base port [" + portConfig.getOffsetBasePort() + "] "
+                            + "using base port [" + portConfig.getOffsetBasePort() + "] "
                             + "to property [" +  offsetPropertyName + "]" );
             }
         }
