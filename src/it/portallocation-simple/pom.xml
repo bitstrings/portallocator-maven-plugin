@@ -23,23 +23,18 @@ limitations under the License.
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
+    <parent>
+        <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
+        <artifactId>portallocation-parent-it</artifactId>
+        <version>1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
     <artifactId>portallocation-simple-it</artifactId>
-    <version>1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <build>
-        <resources>
-            <resource>
-                <directory>resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>@project.groupId@</groupId>
@@ -47,14 +42,15 @@ limitations under the License.
                 <version>@project.version@</version>
                 <executions>
                     <execution>
-                        <id>port-simple</id>
+                        <id>port-simplest</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
                             <ports>
+                                <port>simplest-compact</port>
                                 <port>
-                                    <name>tomcat</name>
+                                    <name>simplest</name>
                                 </port>
                             </ports>
                         </configuration>
@@ -69,9 +65,7 @@ limitations under the License.
                                 <portAllocator>
                                     <preferredPorts>8100</preferredPorts>
                                 </portAllocator>
-                                <port>
-                                    <name>tomcat-preferred</name>
-                                </port>
+                                <port>preferred</port>
                             </ports>
                         </configuration>
                     </execution>
@@ -83,7 +77,7 @@ limitations under the License.
                         <configuration>
                             <ports>
                                 <port>
-                                    <name>tomcat-2</name>
+                                    <name>offset</name>
                                     <offsetBasePort>8080</offsetBasePort>
                                 </port>
                             </ports>
