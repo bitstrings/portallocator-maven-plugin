@@ -29,7 +29,7 @@ Goal `allocate`
 | writePropertiesFile | File | 2.0 | The properties file. |
 | quiet | Boolean | 1.0 | Set to `true` for no output. |
 
-#### Tag `portAllocator`
+#### Structure `portAllocator`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
@@ -38,7 +38,7 @@ Goal `allocate`
 | depletedAction | String | 2.0 | The action to take if preferred ports are depleted.<br/>**Values:** `continue` or `fail`<br/>**Default:** `continue`  |
 | permitOverride | Boolean | 2.0 | By default allocators can not be overridden.<br/>This is useful for multi-module projects.<br/>**Default:** `false` |
 
-#### Tag - ports
+#### Structure `ports`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
@@ -46,7 +46,7 @@ Goal `allocate`
 | portAllocator | PortAllocator | 2.0 | Inner port allocator.<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
 | port | Port | 2.0 | The port to assign. |
 
-#### Tag `port`
+#### Structure `port`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
