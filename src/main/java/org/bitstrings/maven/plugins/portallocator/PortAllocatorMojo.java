@@ -66,9 +66,9 @@ public class PortAllocatorMojo
     private static final String NAME_SEPARATOR_DEFAULT = ".";
     private static final String PORT_ALLOCATOR_DEFAULT_ID = "default";
 
-    private static final Set<Integer> allocatedPorts = synchronizedSet( new HashSet<Integer>() );
+    private static final Set<Integer> ALLOCATED_PORTS = synchronizedSet( new HashSet<Integer>() );
     private static final Map<String, PortAllocatorService>
-                portAllocatorServiceMap =
+                PORT_ALLOCATOR_SERVICE_MAP =
                     synchronizedMap( new HashMap<String, PortAllocatorService>() );
 
     private static final ReentrantLock ALLOCATION_LOCK = new ReentrantLock();
@@ -77,7 +77,7 @@ public class PortAllocatorMojo
 
     static
     {
-        portAllocatorServiceMap.put(
+        PORT_ALLOCATOR_SERVICE_MAP.put(
                 PORT_ALLOCATOR_DEFAULT_ID,
                 PORT_ALLOCATOR_SERVICE_DEFAULT = createPortAllocatorService( new PortAllocator() ) );
     }
@@ -94,24 +94,20 @@ public class PortAllocatorMojo
                 {
                     final PortAllocatorService pas = createPortAllocatorService( portAllocator );
 
-                    ALLOCATION_LOCK.lock();
-
-                    final PortAllocatorService existingPas = portAllocatorServiceMap.get( portAllocator.getId() );
+                    final PortAllocatorService existingPas = PORT_ALLOCATOR_SERVICE_MAP.get( portAllocator.getId() );
 
                     if ( portAllocator.isPermitOverride()
                             || ( existingPas == null )
                             || ( portAllocator.getId().equals( PORT_ALLOCATOR_DEFAULT_ID )
                                     && ( existingPas == PORT_ALLOCATOR_SERVICE_DEFAULT ) ) )
                     {
-                        portAllocatorServiceMap.put( portAllocator.getId(), pas );
+                        PORT_ALLOCATOR_SERVICE_MAP.put( portAllocator.getId(), pas );
 
                         if ( !quiet && getLog().isInfoEnabled() )
                         {
                             getLog().info( "Registering port allocator [" + portAllocator.getId() + "]");
                         }
                     }
-
-                    ALLOCATION_LOCK.unlock();
                 }
             }
 
@@ -125,7 +121,7 @@ public class PortAllocatorMojo
 
                 PortAllocatorService pas =
                     ports.getPortAllocator() == null
-                            ? portAllocatorServiceMap.get(
+                            ? PORT_ALLOCATOR_SERVICE_MAP.get(
                                     firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) )
                             : createPortAllocatorService( ports.getPortAllocator() );
 
@@ -137,15 +133,9 @@ public class PortAllocatorMojo
 
                 for ( Port port : ports.getPorts() )
                 {
-                    ALLOCATION_LOCK.lock();
-
                     allocatePort( pas, port );
-
-                    ALLOCATION_LOCK.unlock();
                 }
             }
-
-            ALLOCATION_LOCK.lock();
 
             if ( writePropertiesFile != null )
             {
@@ -170,8 +160,6 @@ public class PortAllocatorMojo
                     throw new MojoExecutionException( "Problem writing ports file [" + writePropertiesFile + "]", e );
                 }
             }
-
-            ALLOCATION_LOCK.unlock();
         }
         catch ( Exception e )
         {
@@ -201,13 +189,17 @@ public class PortAllocatorMojo
                 @Override
                 public boolean beforeAllocation( int potentialPort )
                 {
-                    return !allocatedPorts.contains( potentialPort );
+                    ALLOCATION_LOCK.lock();
+
+                    return !ALLOCATED_PORTS.contains( potentialPort );
                 }
 
                 @Override
                 public void afterAllocation( int port )
                 {
-                    allocatedPorts.add( port );
+                    ALLOCATED_PORTS.add( port );
+
+                    ALLOCATION_LOCK.unlock();
                 }
             }
         );
