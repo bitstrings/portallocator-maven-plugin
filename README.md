@@ -42,7 +42,7 @@ Goal `allocate`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
-| portAllocatorRef | String | 2.0 | The port allocator reference.<br/>**Default:** `default`<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
+| portAllocatorRef | String | 2.0 | The port allocator `id` to use.<br/>**Default:** `default`<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
 | portAllocator | PortAllocator | 2.0 | Inner port allocator.<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
 | port | Port | 2.0 | The port to assign. |
 
@@ -53,8 +53,6 @@ Goal `allocate`
 | name | String | 2.0 | The first level name of the property. |
 | offsetBasePort | Integer | 2.0 | The base port for offset calculation.<br/>This will set a second property with the suffix `offsetNameSuffix`. |
 
-
-portAllocatorRef
 
 Example - Plugin execution
 --------------------------
