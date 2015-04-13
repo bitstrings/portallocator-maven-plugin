@@ -67,9 +67,7 @@ Example - Plugin execution
                 <goal>allocate</goal>
             </goals>
             <configuration>
-                <ports>
-                    <port>tomcat</port>
-                </ports>
+                <ports>http,https,jndi</ports>
             </configuration>
         </execution>
     <executions>
@@ -77,12 +75,25 @@ Example - Plugin execution
 ```
 
 
-Example - Simplest way
-----------------------
+Example - Simplest way (short form)
+-----------------------------------
+
+#### Short form
+
+```xml
+<configuration>
+    <ports>tomcat</ports>
+</configuration>
+```
+
+#### Long form
+
 ```xml
 <configuration>
     <ports>
-        <port>tomcat</port>
+        <port>
+            <name>tomcat</name>
+        </port>
     </ports>
 </configuration>
 ```
@@ -99,10 +110,12 @@ Example - Get offset relative to a base port
 --------------------------------------------
 ```xml
 <configuration>
-    <port>
-        <name>wildfly</name>
-        <offsetBasePort>8080</offsetBasePort>
-    </port>
+    <ports>
+        <port>
+            <name>wildfly</name>
+            <offsetBasePort>8080</offsetBasePort>
+        </port>
+    </ports>
 </configuration>
 ```
 
@@ -118,10 +131,7 @@ Example - Write the ports to a properties file
 ```xml
 <configuration>
     <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
-    <ports>
-        <port>tomcat</port>
-        <port>hsqldb</port>
-    </ports>
+    <ports>tomcat,hsqldb</ports>
 </configuration>
 ```
 
