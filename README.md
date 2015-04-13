@@ -68,9 +68,7 @@ Example - Plugin execution
             </goals>
             <configuration>
                 <ports>
-                    <port>
-                        <name>tomcat</name>
-                    </port>
+                    <port>tomcat</port>
                 </ports>
             </configuration>
         </execution>

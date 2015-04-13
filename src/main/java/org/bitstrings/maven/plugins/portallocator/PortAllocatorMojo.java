@@ -24,8 +24,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-
-import com.google.common.base.Splitter;
+import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 @Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresProject = true, requiresOnline = false )
 public class PortAllocatorMojo
@@ -232,7 +231,7 @@ public class PortAllocatorMojo
 
     protected static void addPortRanges( PortAllocatorService.Builder builder, String portsCsv )
     {
-        for ( String portRange : Splitter.on( ',' ).trimResults().omitEmptyStrings().split( portsCsv ) )
+        for ( String portRange : Helpers.iterateOnCsv( portsCsv ) )
         {
             final int rangeSepIndex = portRange.indexOf( '-' );
 
