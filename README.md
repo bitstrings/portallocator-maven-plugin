@@ -128,10 +128,42 @@ wildfly.port-offset = 10
 
 Example - Write the ports to a properties file
 ----------------------------------------------
+
+#### Short form
+
 ```xml
 <configuration>
     <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
     <ports>tomcat,hsqldb</ports>
+</configuration>
+```
+
+#### Somewhat short form
+
+```xml
+<configuration>
+    <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
+    <ports>
+        <port>tomcat</port>
+        <port>hsqldb</port>
+    </ports>
+</configuration>
+```
+
+
+#### Long form
+
+```xml
+<configuration>
+    <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
+    <ports>
+        <port>
+            <name>tomcat</name>
+        </port>
+        <port>
+            <name>hsqldb</name>
+        </port>
+    </ports>
 </configuration>
 ```
 
