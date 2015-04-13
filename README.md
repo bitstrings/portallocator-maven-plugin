@@ -75,8 +75,8 @@ Example - Plugin execution
 ```
 
 
-Example - Simplest way (short form)
------------------------------------
+Example - Simplest way
+----------------------
 
 #### Short form
 
