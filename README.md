@@ -22,7 +22,7 @@ Goal `allocate`
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | portAllocators | List | 2.0 | List of port allocators. |
-| ports | Ports | 2.0 | List of ports. |
+| ports | Ports | 2.0 | List of ports.<br/>Short form: `<ports>name1,name2,...</ports>`|
 | nameSeparator | String | 2.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port` |
 | offsetNameSuffix | String | 2.0 | The offset name suffix.<br/>**Default:** `port-offset` |
@@ -44,7 +44,7 @@ Goal `allocate`
 | ---- | ---- | ----- | ----------- |
 | portAllocatorRef | String | 2.0 | The port allocator `id` to use.<br/>**Default:** `default`<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
 | portAllocator | PortAllocator | 2.0 | Inner port allocator.<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
-| port | Port | 2.0 | The port to assign. |
+| port | Port | 2.0 | The port to assign.<br/>Short form: `<port>name</port>` |
 
 #### Structure `port`
 
