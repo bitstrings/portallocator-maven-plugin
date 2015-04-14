@@ -74,6 +74,28 @@ Example - Plugin execution
 </plugin>
 ```
 
+```xml
+<plugin>
+    <groupId>org.bitstrings.maven.plugins</groupId>
+    <artifactId>portallocator-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>port-allocation</id>
+            <goals>
+                <goal>allocate</goal>
+            </goals>
+            <configuration>
+                <ports>
+                    http,
+                    https,
+                    jndi
+                </ports>
+            </configuration>
+        </execution>
+    <executions>
+</plugin>
+```
+
 
 Example - Simplest way
 ----------------------
