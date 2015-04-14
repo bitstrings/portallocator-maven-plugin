@@ -138,6 +138,16 @@ Example - Write the ports to a properties file
 </configuration>
 ```
 
+```xml
+<configuration>
+    <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
+    <ports>
+        tomcat,
+        hsqldb
+    </ports>
+</configuration>
+```
+
 #### Somewhat short form
 
 ```xml
