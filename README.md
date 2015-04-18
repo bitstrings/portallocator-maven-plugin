@@ -21,7 +21,7 @@ Goal `allocate`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
-| portAllocators | List | 2.0 | List of port allocators. |
+| portAllocators | List | 2.0 | List of port allocators.<br/>**Short form:** `<portAllocators>ports1,ports2,...</portAllocators>` |
 | ports | Ports | 2.0 | List of ports.<br/>**Short form:** `<ports>name1,name2,...</ports>`|
 | nameSeparator | String | 2.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port` |
