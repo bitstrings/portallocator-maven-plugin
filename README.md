@@ -39,7 +39,7 @@ Goal `allocate`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
-| id | String | 2.0 | The port allocator id. |
+| id | String | 2.0 | The port allocator id.<br/>**Special:** id=`default` when not specified. |
 | preferredPorts | List | 2.0 | The preferred ports.<br/>**Default:** `8090` |
 | depletedAction | String | 2.0 | The action to take if preferred ports are depleted.<br/>**Values:** `continue` or `fail`<br/>**Default:** `continue`  |
 | permitOverride | Boolean | 2.0 | By default allocators can not be overridden.<br/>This is useful for multi-module projects.<br/>**Default:** `false` |
