@@ -29,6 +29,12 @@ Goal `allocate`
 | writePropertiesFile | File | 2.0 | The properties file. |
 | quiet | Boolean | 1.0 | Set to `true` for no output. |
 
+#### Structure `portAllocators`
+
+| name | type | Since | Description |
+| ---- | ---- | ----- | ----------- |
+| portAllocator | PortAllocator | 2.0 | Port allocator.<br/>**Short form:** `<portAllocator>ports</portAllocator>` |
+
 #### Structure `portAllocator`
 
 | name | type | Since | Description |
