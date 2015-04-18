@@ -212,6 +212,14 @@ Example - Register a port allocator
 </configuration>
 ```
 
+#### Short form
+
+```xml
+<configuration>
+    <portAllocators>9090</portAllocators>
+</configuration>
+```
+
 Two things:
 
 1. Unless you set `permitOverride` to `true`, you can register port allocators in the parent without worrying about re-registering in child modules.
