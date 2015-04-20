@@ -74,4 +74,13 @@ public class PortAllocator
     {
         this.permitOverride = permitOverride;
     }
+
+    public void set( String preferredPortsStr )
+    {
+        final PreferredPorts preferredPorts = new PreferredPorts();
+
+        preferredPorts.addPorts( preferredPortsStr );
+
+        setPreferredPorts( preferredPorts );
+    }
 }
