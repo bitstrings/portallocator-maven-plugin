@@ -30,7 +30,7 @@ limitations under the License.
         <relativePath>..</relativePath>
     </parent>
 
-    <artifactId>portallocation-simple-it</artifactId>
+    <artifactId>portallocation-simplest-it</artifactId>
 
     <packaging>jar</packaging>
 
@@ -77,6 +77,23 @@ limitations under the License.
                             <ports>
                                 <port>
                                     <name>offset</name>
+                                    <offsetBasePort>8080</offsetBasePort>
+                                </port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>allocator-default</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration>
+                            <portAllocators>
+                                <portAllocator>8100</portAllocator>
+                            </portAllocators>
+                            <ports>
+                                <port>
+                                    <name>allocator-default</name>
                                     <offsetBasePort>8080</offsetBasePort>
                                 </port>
                             </ports>
