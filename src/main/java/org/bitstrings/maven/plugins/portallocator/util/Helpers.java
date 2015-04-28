@@ -8,6 +8,11 @@ public final class Helpers
 
     public static Iterable<String> iterateOnCsv( String csv )
     {
-        return Splitter.on( ',' ).trimResults().omitEmptyStrings().split( csv );
+        return iterateOnSplit( csv, "," );
+    }
+
+    public static Iterable<String> iterateOnSplit( String text, String separator )
+    {
+        return Splitter.on( separator ).trimResults().omitEmptyStrings().split( text );
     }
 }

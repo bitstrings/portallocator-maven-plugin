@@ -1,9 +1,14 @@
 package org.bitstrings.maven.plugins.portallocator;
 
+import java.util.Iterator;
+
+import org.bitstrings.maven.plugins.portallocator.util.Helpers;
+
 public class Port
 {
     private String name;
     private Integer offsetBasePort;
+    private String offsetFrom;
 
     public String getName()
     {
@@ -25,8 +30,30 @@ public class Port
         this.offsetBasePort = offsetBasePort;
     }
 
-    public void set( String name )
+    public String getOffsetFrom()
     {
-        setName( name );
+        return offsetFrom;
+    }
+
+    public void setOffsetFrom(String offsetFrom)
+    {
+        this.offsetFrom = offsetFrom;
+    }
+
+    public void set( String portExpr )
+    {
+        final Iterator<String> components = Helpers.iterateOnSplit( portExpr, ":" ).iterator();
+
+        setName( components.next() );
+
+        if ( components.hasNext() )
+        {
+            setOffsetBasePort( Integer.parseInt(components.next()) );
+        }
+
+        if ( components.hasNext() )
+        {
+            setOffsetFrom( components.next() );
+        }
     }
 }

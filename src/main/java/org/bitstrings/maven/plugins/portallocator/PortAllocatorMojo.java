@@ -10,7 +10,6 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -40,7 +39,7 @@ public class PortAllocatorMojo
     private boolean quiet;
 
     @Parameter
-    private List<PortAllocator> portAllocators;
+    private PortAllocators portAllocators;
 
     @Parameter
     private Ports ports;
@@ -130,7 +129,7 @@ public class PortAllocatorMojo
                         "Cannot find port allocator [" + ports.getPortAllocatorRef() + "]" );
                 }
 
-                for ( Port port : ports.getPorts() )
+                for ( Port port : ports.getPortList() )
                 {
                     allocatePort( pas, port );
                 }

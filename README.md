@@ -261,3 +261,23 @@ This allocator will try to assign ports from `8080` to `9090`, otherwise fail.
 ```
 
 Use the `pool-1` port allocator.
+
+
+Example -
+-----------------------------------
+```xml
+<configuration>
+    <ports>
+        <port>
+            <name>wildfly-http</name>
+            <offsetBasePort>8080</offsetBasePort>
+        </port>
+        <port>
+            <name>wildfly-https</name>
+            <offsetBasePort>8443</offsetBasePort>
+            <offsetFrom>wildfly-http</offsetFrom>
+        </port>
+        <port>hsqldb</port>
+    </ports>
+</configuration>
+```

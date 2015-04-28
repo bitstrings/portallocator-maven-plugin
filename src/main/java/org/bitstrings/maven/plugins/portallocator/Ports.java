@@ -11,7 +11,7 @@ public class Ports
 
     private PortAllocator portAllocator;
 
-    private final List<Port> ports = new LinkedList<>();
+    private final List<Port> portList = new LinkedList<>();
 
     public String getPortAllocatorRef()
     {
@@ -33,14 +33,14 @@ public class Ports
         this.portAllocator = portAllocator;
     }
 
-    public List<Port> getPorts()
+    public List<Port> getPortList()
     {
-        return ports;
+        return portList;
     }
 
     public void addPort( Port port )
     {
-        ports.add( port );
+        portList.add( port );
     }
 
     public void set( String portNames )
