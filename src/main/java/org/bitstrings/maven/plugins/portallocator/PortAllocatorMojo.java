@@ -129,7 +129,7 @@ public class PortAllocatorMojo
                         "Cannot find port allocator [" + ports.getPortAllocatorRef() + "]" );
                 }
 
-                for ( Port port : ports.getPortList() )
+                for ( Port port : ports )
                 {
                     allocatePort( pas, port );
                 }

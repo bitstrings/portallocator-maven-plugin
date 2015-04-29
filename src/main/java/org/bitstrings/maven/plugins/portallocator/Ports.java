@@ -1,11 +1,13 @@
 package org.bitstrings.maven.plugins.portallocator;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 public class Ports
+    implements Iterable<Port>
 {
     private String portAllocatorRef;
 
@@ -53,5 +55,11 @@ public class Ports
 
             addPort( port );
         }
+    }
+
+    @Override
+    public Iterator<Port> iterator()
+    {
+        return portList.iterator();
     }
 }
