@@ -144,11 +144,11 @@ public class PortAllocatorMojo
                     parent.mkdirs();
                 }
 
-                try (final Writer out = new BufferedWriter( new FileWriter( writePropertiesFile ) ) )
+                try ( final Writer out = new BufferedWriter( new FileWriter( writePropertiesFile ) ) )
                 {
                     if ( !quiet && getLog().isInfoEnabled() )
                     {
-                        getLog().info( "Writing ports file [" + writePropertiesFile + "]");
+                        getLog().info( "Writing ports file [" + writePropertiesFile + "]" );
                     }
 
                     execPorts.store( out, null );
