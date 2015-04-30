@@ -183,6 +183,14 @@ public class PortAllocatorService
     public boolean isPortAvailable( int port )
         throws IOException
     {
+        for ( Listener l : listeners )
+        {
+            if ( !l.beforeAllocation( port ) )
+            {
+                return false;
+            }
+        }
+
         for ( PortRange portRange : portRanges )
         {
             if ( portRange.isInRange( port ) )
@@ -191,7 +199,17 @@ public class PortAllocatorService
             }
         }
 
-        return ( overflowPermitted ? isPortAllocatable( port ) : false );
+        try
+        {
+            return ( overflowPermitted ? isPortAllocatable( port ) : false );
+        }
+        finally
+        {
+            for ( Listener l : listeners )
+            {
+                l.afterAllocation( port );
+            }
+        }
     }
 
     protected boolean isPortAllocatable( int port )

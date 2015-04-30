@@ -7,9 +7,13 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -24,6 +28,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.bitstrings.maven.plugins.portallocator.util.Helpers;
+
+import com.google.common.collect.Iterators;
+import com.google.common.collect.LinkedListMultimap;
 
 @Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresProject = true, requiresOnline = false )
 public class PortAllocatorMojo
@@ -113,7 +120,7 @@ public class PortAllocatorMojo
             {
                 if ( ( ports.getPortAllocatorRef() != null ) && ( ports.getPortAllocator() != null ) )
                 {
-                    throw new MojoFailureException(
+                    throw new MojoExecutionException(
                         "Either use a port allocator reference or define an inner allocator but you can use both." );
                 }
 
@@ -125,13 +132,53 @@ public class PortAllocatorMojo
 
                 if ( pas == null )
                 {
-                    throw new MojoFailureException(
+                    throw new MojoExecutionException(
                         "Cannot find port allocator [" + ports.getPortAllocatorRef() + "]" );
                 }
 
+                final LinkedListMultimap<String, Port> portGroupMap = LinkedListMultimap.create();
+
                 for ( Port port : ports )
                 {
-                    allocatePort( pas, port );
+                    portGroupMap.put( port.getName(), port );
+
+                    if ( port.getOffsetFrom() != null )
+                    {
+                        portGroupMap.put( port.getOffsetFrom(), port );
+                    }
+                }
+
+                while ( !portGroupMap.isEmpty() )
+                {
+                    for ( Map.Entry<String, Port> portEntry : portGroupMap.entries() )
+                    {
+
+                    }
+                }
+
+                final ListIterator<Port> redoIterator = new LinkedList<Port>().listIterator();
+                final Iterator<Port> portIter = Iterators.concat( ports.getPortList().listIterator(), redoIterator );
+
+                while ( portIter.hasNext() )
+                {
+                    final Port port = portIter.next();
+
+                    final int portNumber = allocatePort( pas, port );
+
+                    portGroupMap.put( port.getName(), port );
+
+                    if ( port.getOffsetFrom() != null )
+                    {
+                        portGroupMap.put( port.getOffsetFrom(), port );
+
+                        if ( portNumber == PortAllocatorService.PORT_NA )
+                        {
+                            for ( Port portFromGroup : portGroupMap.get( port.getOffsetFrom() ) )
+                            {
+                                redoIterator.add( portFromGroup );
+                            }
+                        }
+                    }
                 }
             }
 
@@ -161,9 +208,13 @@ public class PortAllocatorMojo
                 }
             }
         }
+        catch ( MojoExecutionException e )
+        {
+            throw e;
+        }
         catch ( Exception e )
         {
-            throw new MojoFailureException( e.getLocalizedMessage(), e );
+            throw new MojoExecutionException( e.getLocalizedMessage(), e );
         }
     }
 
@@ -258,8 +309,8 @@ public class PortAllocatorMojo
         }
     }
 
-    protected void allocatePort( PortAllocatorService pas, Port portConfig )
-        throws Exception
+    protected int allocatePort( PortAllocatorService pas, Port portConfig )
+        throws MojoExecutionException, IOException
     {
         final String portNamePrefix = portConfig.getName();
         final String portPropertyName = getPortName( portNamePrefix );
@@ -273,7 +324,7 @@ public class PortAllocatorMojo
 
             if ( fromOffset == null )
             {
-                throw new MojoFailureException(
+                throw new MojoExecutionException(
                         "Port [" + portPropertyName + "] references an unknown port offset [" + offsetFromName + "]" );
             }
 
@@ -308,6 +359,8 @@ public class PortAllocatorMojo
                             + "to property [" +  offsetPropertyName + "]" );
             }
         }
+
+        return PortAllocatorService.PORT_NA;
     }
 
     protected String getPortName( String prefix )
