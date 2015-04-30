@@ -102,7 +102,7 @@ public class PortAllocatorService
 
             if ( !isInRange( start) )
             {
-                throw new IllegalArgumentException( "Start port must be in range [ " + lowest + ", " + highest + " ]." );
+                throw new IllegalArgumentException( "Start port must be in range [" + lowest + ", " + highest + "]." );
             }
 
             this.next = start;

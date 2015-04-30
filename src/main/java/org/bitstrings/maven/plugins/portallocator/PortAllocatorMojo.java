@@ -56,7 +56,7 @@ public class PortAllocatorMojo
     @Parameter
     private File writePropertiesFile;
 
-    private final Properties executionPortMap = new Properties();
+    private final Map<String, Integer> executionPortMap = new HashMap<>();
 
     private static final String PREFERRED_PORTS_DEFAULT = "8090";
     private static final String PORT_NAME_SUFFIX_DEFAULT = "port";
@@ -151,7 +151,9 @@ public class PortAllocatorMojo
                         getLog().info( "Writing ports file [" + writePropertiesFile + "]" );
                     }
 
-                    executionPortMap.store( out, null );
+                    final Properties outProps = new Properties();
+                    outProps.putAll( executionPortMap );
+                    outProps.store( out, null );
                 }
                 catch ( Exception e )
                 {
@@ -256,21 +258,34 @@ public class PortAllocatorMojo
         }
     }
 
-    protected static String getPropertyName( String separator, String... names )
-    {
-        return StringUtils.join( names, separator );
-    }
-
     protected void allocatePort( PortAllocatorService pas, Port portConfig )
         throws Exception
     {
         final String portNamePrefix = portConfig.getName();
-        final String portPropertyName = getPropertyName( nameSeparator, portNamePrefix, portNameSuffix );
+        final String portPropertyName = getPortName( portNamePrefix );
 
-        final int allocatedPort = pas.nextAvailablePort();
+        final int allocatedPort;
+
+        if ( portConfig.getOffsetFrom() != null )
+        {
+            final String offsetFromName = getOffsetName( portConfig.getOffsetFrom() );
+            final Integer fromOffset = executionPortMap.get( offsetFromName );
+
+            if ( fromOffset == null )
+            {
+                throw new MojoFailureException(
+                        "Port [" + portPropertyName + "] references an unknown port offset [" + offsetFromName + "]" );
+            }
+
+            allocatedPort = 0; //pas.isPortAvailable( 0 );
+        }
+        else
+        {
+            allocatedPort = pas.nextAvailablePort();
+        }
 
         mavenProject.getProperties().put( portPropertyName, String.valueOf( allocatedPort ) );
-        executionPortMap.setProperty( portPropertyName, String.valueOf( allocatedPort ) );
+        executionPortMap.put( portPropertyName, allocatedPort );
 
         if ( !quiet && getLog().isInfoEnabled() )
         {
@@ -279,11 +294,11 @@ public class PortAllocatorMojo
 
         if ( portConfig.getOffsetBasePort() != null )
         {
-            final String offsetPropertyName = getPropertyName( nameSeparator, portNamePrefix, offsetNameSuffix );
-            final String offset = String.valueOf( allocatedPort - portConfig.getOffsetBasePort() );
+            final String offsetPropertyName = getOffsetName( portNamePrefix );
+            final int offset = ( allocatedPort - portConfig.getOffsetBasePort() );
 
-            mavenProject.getProperties().put( offsetPropertyName, offset );
-            executionPortMap.setProperty( offsetPropertyName, offset );
+            mavenProject.getProperties().put( offsetPropertyName, String.valueOf( offset ) );
+            executionPortMap.put( offsetPropertyName, offset );
 
             if ( !quiet && getLog().isInfoEnabled() )
             {
@@ -293,5 +308,20 @@ public class PortAllocatorMojo
                             + "to property [" +  offsetPropertyName + "]" );
             }
         }
+    }
+
+    protected String getPortName( String prefix )
+    {
+        return buildName( prefix, portNameSuffix );
+    }
+
+    protected String getOffsetName( String prefix )
+    {
+        return buildName( prefix, offsetNameSuffix );
+    }
+
+    protected String buildName( String... parts )
+    {
+        return StringUtils.join( parts, nameSeparator );
     }
 }
