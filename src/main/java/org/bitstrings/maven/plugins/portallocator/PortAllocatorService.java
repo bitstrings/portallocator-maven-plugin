@@ -100,9 +100,19 @@ public class PortAllocatorService
                 throw new IllegalArgumentException( "Range must be valid, i.e.: lowest >= 0 and lowest <= highest." );
             }
 
+            if ( !isInRange( start) )
+            {
+                throw new IllegalArgumentException( "Start port must be in range [ " + lowest + ", " + highest + " ]." );
+            }
+
             this.next = start;
 
             this.wrapAround = wrapAround;
+        }
+
+        public boolean isInRange( int port )
+        {
+            return ( ( port >= lowest ) && ( port <= highest ) );
         }
 
         public int getLowest()
@@ -170,6 +180,38 @@ public class PortAllocatorService
         return overflowPermitted;
     }
 
+    public boolean isPortAvailable( int port )
+        throws IOException
+    {
+        for ( PortRange portRange : portRanges )
+        {
+            if ( portRange.isInRange( port ) )
+            {
+                return isPortAllocatable( port );
+            }
+        }
+
+        return ( overflowPermitted ? isPortAllocatable( port ) : false );
+    }
+
+    protected boolean isPortAllocatable( int port )
+        throws IOException
+    {
+        ServerSocket server;
+        try
+        {
+            server = new ServerSocket( port );
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
+
+        server.close();
+
+        return true;
+    }
+
     public int nextAvailablePort()
         throws IOException
     {
@@ -205,7 +247,7 @@ public class PortAllocatorService
                 }
             }
         }
-        while ( ( port == PORT_NA ) || !isPortAvail( port ) );
+        while ( ( port == PORT_NA ) || !isPortAvailable( port ) );
 
         for ( Listener l : listeners )
         {
@@ -213,23 +255,5 @@ public class PortAllocatorService
         }
 
         return port;
-    }
-
-    protected boolean isPortAvail( final int port )
-        throws IOException
-    {
-        ServerSocket server;
-        try
-        {
-            server = new ServerSocket( port );
-        }
-        catch (IOException e)
-        {
-            return false;
-        }
-
-        server.close();
-
-        return true;
     }
 }

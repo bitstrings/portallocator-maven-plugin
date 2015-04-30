@@ -56,7 +56,7 @@ public class PortAllocatorMojo
     @Parameter
     private File writePropertiesFile;
 
-    private final Properties execPorts = new Properties();
+    private final Properties executionPortMap = new Properties();
 
     private static final String PREFERRED_PORTS_DEFAULT = "8090";
     private static final String PORT_NAME_SUFFIX_DEFAULT = "port";
@@ -151,7 +151,7 @@ public class PortAllocatorMojo
                         getLog().info( "Writing ports file [" + writePropertiesFile + "]" );
                     }
 
-                    execPorts.store( out, null );
+                    executionPortMap.store( out, null );
                 }
                 catch ( Exception e )
                 {
@@ -270,7 +270,7 @@ public class PortAllocatorMojo
         final int allocatedPort = pas.nextAvailablePort();
 
         mavenProject.getProperties().put( portPropertyName, String.valueOf( allocatedPort ) );
-        execPorts.setProperty( portPropertyName, String.valueOf( allocatedPort ) );
+        executionPortMap.setProperty( portPropertyName, String.valueOf( allocatedPort ) );
 
         if ( !quiet && getLog().isInfoEnabled() )
         {
@@ -283,7 +283,7 @@ public class PortAllocatorMojo
             final String offset = String.valueOf( allocatedPort - portConfig.getOffsetBasePort() );
 
             mavenProject.getProperties().put( offsetPropertyName, offset );
-            execPorts.setProperty( offsetPropertyName, offset );
+            executionPortMap.setProperty( offsetPropertyName, offset );
 
             if ( !quiet && getLog().isInfoEnabled() )
             {

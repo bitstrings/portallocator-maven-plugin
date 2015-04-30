@@ -277,6 +277,7 @@ Example -
             <offsetBasePort>8443</offsetBasePort>
             <offsetFrom>wildfly-http</offsetFrom>
         </port>
+        <port>wildfly-jndi:8888:wildfly-http</port>
         <port>hsqldb</port>
     </ports>
 </configuration>
