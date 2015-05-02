@@ -9,11 +9,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -29,8 +28,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
-import com.google.common.collect.Iterators;
+import com.google.common.base.Function;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Maps;
 
 @Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresProject = true, requiresOnline = false )
 public class PortAllocatorMojo
@@ -150,33 +150,27 @@ public class PortAllocatorMojo
 
                 while ( !portGroupMap.isEmpty() )
                 {
-                    for ( Map.Entry<String, Port> portEntry : portGroupMap.entries() )
+                    portGroupMap.entries().listIterator();
+
+                    for (
+                        Iterator<Map.Entry<String, Collection<Port>>> iter = portGroupMap.asMap().entrySet().iterator();
+                        iter.hasNext(); )
                     {
+                        final Map.Entry<String, Collection<Port>> entry = iter.next();
 
-                    }
-                }
-
-                final ListIterator<Port> redoIterator = new LinkedList<Port>().listIterator();
-                final Iterator<Port> portIter = Iterators.concat( ports.getPortList().listIterator(), redoIterator );
-
-                while ( portIter.hasNext() )
-                {
-                    final Port port = portIter.next();
-
-                    final int portNumber = allocatePort( pas, port );
-
-                    portGroupMap.put( port.getName(), port );
-
-                    if ( port.getOffsetFrom() != null )
-                    {
-                        portGroupMap.put( port.getOffsetFrom(), port );
-
-                        if ( portNumber == PortAllocatorService.PORT_NA )
+                        boolean groupSuccess = true;
+                        for ( Port port : entry.getValue() )
                         {
-                            for ( Port portFromGroup : portGroupMap.get( port.getOffsetFrom() ) )
+                            if ( !allocatePort( pas, port ) )
                             {
-                                redoIterator.add( portFromGroup );
+                                groupSuccess = false;
+                                break;
                             }
+                        }
+
+                        if ( groupSuccess )
+                        {
+                            iter.remove();
                         }
                     }
                 }
@@ -199,7 +193,19 @@ public class PortAllocatorMojo
                     }
 
                     final Properties outProps = new Properties();
-                    outProps.putAll( executionPortMap );
+                    outProps.putAll(
+                        Maps.transformValues(
+                            executionPortMap,
+                            new Function<Integer, String>()
+                            {
+                                @Override
+                                public String apply( Integer input )
+                                {
+                                    return input.toString();
+                                }
+                            }
+                        )
+                    );
                     outProps.store( out, null );
                 }
                 catch ( Exception e )
@@ -309,7 +315,7 @@ public class PortAllocatorMojo
         }
     }
 
-    protected int allocatePort( PortAllocatorService pas, Port portConfig )
+    protected boolean allocatePort( PortAllocatorService pas, Port portConfig )
         throws MojoExecutionException, IOException
     {
         final String portNamePrefix = portConfig.getName();
@@ -328,11 +334,21 @@ public class PortAllocatorMojo
                         "Port [" + portPropertyName + "] references an unknown port offset [" + offsetFromName + "]" );
             }
 
-            allocatedPort = 0; //pas.isPortAvailable( 0 );
+            allocatedPort = ( portConfig.getOffsetBasePort() + fromOffset );
+
+            if ( !pas.isPortAvailable( allocatedPort ) )
+            {
+                return false;
+            }
         }
         else
         {
             allocatedPort = pas.nextAvailablePort();
+
+            if ( allocatedPort == PortAllocatorService.PORT_NA )
+            {
+                throw new MojoExecutionException( "Unable to allocate a port for [" + portPropertyName + "]" );
+            }
         }
 
         mavenProject.getProperties().put( portPropertyName, String.valueOf( allocatedPort ) );
@@ -360,7 +376,7 @@ public class PortAllocatorMojo
             }
         }
 
-        return PortAllocatorService.PORT_NA;
+        return true;
     }
 
     protected String getPortName( String prefix )
