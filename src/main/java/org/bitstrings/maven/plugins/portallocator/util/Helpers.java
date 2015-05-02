@@ -13,6 +13,18 @@ public final class Helpers
 
     public static Iterable<String> iterateOnSplit( String text, String separator )
     {
-        return Splitter.on( separator ).trimResults().omitEmptyStrings().split( text );
+        return iterateOnSplit( text, separator, true );
+    }
+
+    public static Iterable<String> iterateOnSplit( String text, String separator, boolean omitEmpty )
+    {
+        final Splitter splitter = Splitter.on( separator ).trimResults();
+
+        if ( omitEmpty )
+        {
+            splitter.omitEmptyStrings();
+        }
+
+        return splitter.split( text );
     }
 }

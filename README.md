@@ -57,7 +57,18 @@ Goal `allocate`
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
 | name | String | 2.0 | The first level name of the property. |
+| preferredPort | Integer | 2.0 | The preferred port if available. |
 | offsetBasePort | Integer | 2.0 | The base port for offset calculation.<br/>This will set a second property with the suffix `offsetNameSuffix`. |
+| offsetFrom | String | 2.0 | Use the offset from the specified port. |
+
+
+#### Alternative port definition
+
+You may use this alternative syntax to define a port:
+
+```
+{name}:{preferredPort}:{offsetBasePort}:{offsetFrom}
+```
 
 
 Example - Plugin execution
@@ -79,6 +90,8 @@ Example - Plugin execution
     <executions>
 </plugin>
 ```
+
+or
 
 ```xml
 <plugin>
@@ -106,6 +119,8 @@ Example - Plugin execution
 Example - Simplest way
 ----------------------
 
+This is the simplest way you can assign a port. The default preferred port is 8090.
+
 #### Short form
 
 ```xml
@@ -126,31 +141,47 @@ Example - Simplest way
 </configuration>
 ```
 
-This is the simplest way you can assign a port. The default preferred port is 8090.
-
 #### Result might be or any other port depending on availability:
 ```
 tomcat.port = 8090
 ```
 
 
-Example - Get offset relative to a base port
---------------------------------------------
+Example - Preferred port
+------------------------
+
+
+
+#### Short form
+
+```xml
+<configuration>
+    <ports>
+        <port>wildfly:8080</port>
+    </ports>
+</configuration>
+```
+
+or
+
+```xml
+<configuration>
+    <ports>wildfly:8080</ports>
+</configuration>
+```
+
+
+#### Long form
+
 ```xml
 <configuration>
     <ports>
         <port>
             <name>wildfly</name>
-            <offsetBasePort>8080</offsetBasePort>
+            <preferredPort>8080</preferredPort>
         </port>
     </ports>
 </configuration>
-```
-
-#### Result might be or any other port depending on availability:
-```
-wildfly.port = 8090
-wildfly.port-offset = 10
 ```
 
 

@@ -7,6 +7,7 @@ import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 public class Port
 {
     private String name;
+    private Integer PreferredPort;
     private Integer offsetBasePort;
     private String offsetFrom;
 
@@ -18,6 +19,16 @@ public class Port
     public void setName( String name )
     {
         this.name = name;
+    }
+
+    public Integer getPreferredPort()
+    {
+        return PreferredPort;
+    }
+
+    public void setPreferredPort( Integer preferredPort )
+    {
+        PreferredPort = preferredPort;
     }
 
     public Integer getOffsetBasePort()
@@ -35,20 +46,25 @@ public class Port
         return offsetFrom;
     }
 
-    public void setOffsetFrom(String offsetFrom)
+    public void setOffsetFrom( String offsetFrom )
     {
         this.offsetFrom = offsetFrom;
     }
 
     public void set( String portExpr )
     {
-        final Iterator<String> components = Helpers.iterateOnSplit( portExpr, ":" ).iterator();
+        final Iterator<String> components = Helpers.iterateOnSplit( portExpr, ":", false ).iterator();
 
         setName( components.next() );
 
         if ( components.hasNext() )
         {
-            setOffsetBasePort( Integer.parseInt(components.next()) );
+            setPreferredPort( Integer.parseInt( components.next() ) );
+        }
+
+        if ( components.hasNext() )
+        {
+            setOffsetBasePort( Integer.parseInt( components.next()) );
         }
 
         if ( components.hasNext() )
