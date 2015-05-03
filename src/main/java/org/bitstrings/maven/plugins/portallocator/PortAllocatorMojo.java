@@ -325,6 +325,11 @@ public class PortAllocatorMojo
 
         if ( portConfig.getOffsetFrom() != null )
         {
+            if ( portConfig.getPreferredPort() == null )
+            {
+                throw new MojoExecutionException( "'preferredPort' must be set when using 'fromOffset'." );
+            }
+
             final String offsetFromName = getOffsetName( portConfig.getOffsetFrom() );
             final Integer fromOffset = executionPortMap.get( offsetFromName );
 
@@ -334,7 +339,7 @@ public class PortAllocatorMojo
                         "Port [" + portPropertyName + "] references an unknown port offset [" + offsetFromName + "]" );
             }
 
-            allocatedPort = ( portConfig.getOffsetBasePort() + fromOffset );
+            allocatedPort = ( portConfig.getPreferredPort() + fromOffset );
 
             if ( !pas.isPortAvailable( allocatedPort ) )
             {
@@ -343,7 +348,10 @@ public class PortAllocatorMojo
         }
         else
         {
-            allocatedPort = pas.nextAvailablePort();
+            allocatedPort =
+                ( ( portConfig.getPreferredPort() != null ) && pas.isPortAvailable( portConfig.getPreferredPort() ) )
+                        ? portConfig.getPreferredPort()
+                        : pas.nextAvailablePort();
 
             if ( allocatedPort == PortAllocatorService.PORT_NA )
             {
@@ -359,10 +367,15 @@ public class PortAllocatorMojo
             getLog().info( "Assigning port [" + allocatedPort + "] to property [" +  portPropertyName + "]" );
         }
 
-        if ( portConfig.getOffsetBasePort() != null )
+        if ( portConfig.getSetOffset() != null )
         {
+            if ( portConfig.getPreferredPort() == null )
+            {
+                throw new MojoExecutionException( "'preferredPort' must be set when using 'setOffset'." );
+            }
+
             final String offsetPropertyName = getOffsetName( portNamePrefix );
-            final int offset = ( allocatedPort - portConfig.getOffsetBasePort() );
+            final int offset = ( allocatedPort - portConfig.getPreferredPort() );
 
             mavenProject.getProperties().put( offsetPropertyName, String.valueOf( offset ) );
             executionPortMap.put( offsetPropertyName, offset );
@@ -371,7 +384,7 @@ public class PortAllocatorMojo
             {
                 getLog().info(
                         "Assigning offset [" + offset + "] "
-                            + "using base port [" + portConfig.getOffsetBasePort() + "] "
+                            + "using preferred port [" + portConfig.getPreferredPort() + "] "
                             + "to property [" +  offsetPropertyName + "]" );
             }
         }

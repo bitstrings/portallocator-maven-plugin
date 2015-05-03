@@ -2,13 +2,14 @@ package org.bitstrings.maven.plugins.portallocator;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 public class Port
 {
     private String name;
     private Integer PreferredPort;
-    private Integer offsetBasePort;
+    private Boolean setOffset;
     private String offsetFrom;
 
     public String getName()
@@ -31,14 +32,14 @@ public class Port
         PreferredPort = preferredPort;
     }
 
-    public Integer getOffsetBasePort()
+    public Boolean getSetOffset()
     {
-        return offsetBasePort;
+        return setOffset;
     }
 
-    public void setOffsetBasePort( Integer offsetBasePort )
+    public void setSetOffset( Boolean setOffset )
     {
-        this.offsetBasePort = offsetBasePort;
+        this.setOffset = setOffset;
     }
 
     public String getOffsetFrom()
@@ -64,7 +65,7 @@ public class Port
 
         if ( components.hasNext() )
         {
-            setOffsetBasePort( Integer.parseInt( components.next()) );
+            setSetOffset( BooleanUtils.toBoolean( components.next() ) );
         }
 
         if ( components.hasNext() )
