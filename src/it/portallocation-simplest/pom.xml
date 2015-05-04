@@ -41,60 +41,24 @@ limitations under the License.
                 <artifactId>@project.artifactId@</artifactId>
                 <executions>
                     <execution>
-                        <id>port-simplest</id>
+                        <id>port-simplest-compact</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
-                            <ports>
-                                <port>simplest-compact</port>
-                                <port>
-                                    <name>simplest</name>
-                                </port>
-                            </ports>
+                            <ports>simplest-compact</ports>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>port-preferred</id>
+                        <id>port-simplest-short</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
                             <ports>
-                                <portAllocator>
-                                    <preferredPorts>8100</preferredPorts>
-                                </portAllocator>
-                                <port>preferred</port>
-                            </ports>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>port-offset</id>
-                        <goals>
-                            <goal>allocate</goal>
-                        </goals>
-                        <configuration>
-                            <ports>
+                                <port>simplest-short</port>
                                 <port>
-                                    <name>offset</name>
-                                    <offsetBasePort>8080</offsetBasePort>
-                                </port>
-                            </ports>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>allocator-default</id>
-                        <goals>
-                            <goal>allocate</goal>
-                        </goals>
-                        <configuration>
-                            <portAllocators>
-                                <portAllocator>8100</portAllocator>
-                            </portAllocators>
-                            <ports>
-                                <port>
-                                    <name>allocator-default</name>
-                                    <offsetBasePort>8080</offsetBasePort>
+                                    <name>simplest-full</name>
                                 </port>
                             </ports>
                         </configuration>
