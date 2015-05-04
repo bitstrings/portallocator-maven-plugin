@@ -58,8 +58,8 @@ Goal `allocate`
 | ---- | ---- | ----- | ----------- |
 | name | String | 2.0 | The first level name of the property. |
 | preferredPort | Integer | 2.0 | The preferred port if available. |
-| offsetBasePort | Integer | 2.0 | The base port for offset calculation.<br/>This will set a second property with the suffix `offsetNameSuffix`. |
 | offsetFrom | String | 2.0 | Use the offset from the specified port. |
+| setOffsetProperty | Boolean | 2.0 | If `true` this will set the port offset property.<br/>**Default:** `false` |
 
 
 #### Alternative port definition
@@ -67,7 +67,7 @@ Goal `allocate`
 You may use this alternative syntax to define a port:
 
 ```
-{name}:{preferredPort}:{offsetBasePort}:{offsetFrom}
+{name}:{preferredPort}:{offsetFrom}:{setOffsetProperty}
 ```
 
 
