@@ -8,10 +8,10 @@ import org.junit.Rule;
 public class AbstractPortAllocatorTest
 {
     @Rule
-    protected TestResources resources = new TestResources();
+    public TestResources resources = new TestResources();
 
     @Rule
-    protected MojoRule rule = new MojoRule();
+    public MojoRule rule = new MojoRule();
 
     public MavenProject createBaseMavenProject()
         throws Exception

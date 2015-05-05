@@ -34,4 +34,31 @@ public class PortAllocatorMojoTest
 
         assertEquals( "8190", "cd.port", project );
     }
+
+    @Test
+    public void portsFullForm()
+        throws Exception
+    {
+        new PortAllocatorServiceMock( 8090, 9090, 9191 );
+
+        MavenProject project = createBaseMavenProject();
+
+        rule.executeMojo(
+                project,
+                "allocate",
+                domFromString(
+                    "<ports>"
+                        + "<port>"
+                        + "<name>full</name>"
+                        + "</port>"
+                        + "<port>"
+                        + "<name>full-preferred</name>"
+                        + "</port>"
+                        + "</ports>"
+                )
+        );
+
+        assertEquals( "8090", "full.port", project );
+        assertEquals( "9191", "full-preferred.port", project );
+    }
 }

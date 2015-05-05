@@ -27,7 +27,7 @@ public class PortAllocatorServiceMock
     protected boolean isPortAllocatable( int port )
         throws IOException
     {
-        System.out.println( "<------------------------------> " + port );
+        System.out.println( "Asking for port: " + port + " and is available: " + availablePorts.contains( port ) );
 
         return availablePorts.remove( port );
     }
