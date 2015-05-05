@@ -61,13 +61,13 @@ public class Ports
         portList.add( port );
     }
 
-    public void set( String portNames )
+    public void set( String portsStr )
     {
-        for ( String portName : Helpers.iterateOnCsv( portNames ) )
+        for ( String portStr : Helpers.iterateOnCsv( portsStr ) )
         {
             final Port port = new Port();
 
-            port.setName( portName );
+            port.set( portStr );
 
             addPort( port );
         }
