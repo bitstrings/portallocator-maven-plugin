@@ -281,7 +281,7 @@ public class PortAllocatorService
                 }
             }
         }
-        while ( ( port == PORT_NA ) || !isPortAvailable( port ) );
+        while ( ( port == PORT_NA ) || !isPortAllocatable( port ) );
 
         for ( Listener l : listeners )
         {
