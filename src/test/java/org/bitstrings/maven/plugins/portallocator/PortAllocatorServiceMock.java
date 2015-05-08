@@ -8,6 +8,7 @@ import java.util.Set;
 import mockit.Mock;
 import mockit.MockUp;
 
+import org.bitstrings.maven.plugins.portallocator.PortAllocatorService;
 import org.bitstrings.maven.plugins.portallocator.PortAllocatorService.PortRange;
 
 public class PortAllocatorServiceMock

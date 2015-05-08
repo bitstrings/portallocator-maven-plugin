@@ -1,4 +1,4 @@
-package org.bitstrings.maven.plugins.portallocator;
+package org.bitstrings.maven.plugins.portallocator.util;
 
 import java.io.IOException;
 import java.io.StringReader;
