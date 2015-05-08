@@ -8,27 +8,39 @@ import java.util.Set;
 import mockit.Mock;
 import mockit.MockUp;
 
+import org.bitstrings.maven.plugins.portallocator.PortAllocatorService.PortRange;
+
 public class PortAllocatorServiceMock
     extends MockUp<PortAllocatorService>
 {
-    private final Set<Integer> availablePorts = new LinkedHashSet<>();
+    private final Set<PortRange> unavailablePortRanges = new LinkedHashSet<>();
 
-    public PortAllocatorServiceMock( Integer... ports )
+    public PortAllocatorServiceMock( PortRange... portRanges )
     {
-        Collections.addAll( availablePorts, ports );
+        Collections.addAll( unavailablePortRanges, portRanges );
     }
 
-    public Set<Integer> availablePorts()
+    public Set<PortRange> availablePortRanges()
     {
-        return availablePorts;
+        return unavailablePortRanges;
     }
 
     @Mock
     protected boolean isPortAllocatable( int port )
         throws IOException
     {
-        System.out.println( "Asking for port: " + port + " and is available: " + availablePorts.contains( port ) );
+        for ( PortRange portRange : unavailablePortRanges )
+        {
+            if ( portRange.isInRange( port ) )
+            {
+                System.out.println( "Port [" + port + "] and is unavailable." );
 
-        return availablePorts.remove( port );
+                return false;
+            }
+        }
+
+        System.out.println( "Port [" + port + "] and is available." );
+
+        return true;
     }
 }

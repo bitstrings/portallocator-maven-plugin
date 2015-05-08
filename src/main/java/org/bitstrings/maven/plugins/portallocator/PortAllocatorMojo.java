@@ -108,6 +108,8 @@ public class PortAllocatorMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        System.out.println( ":: " + ALLOCATED_PORTS );
+
         try
         {
             if ( portAllocators != null )
