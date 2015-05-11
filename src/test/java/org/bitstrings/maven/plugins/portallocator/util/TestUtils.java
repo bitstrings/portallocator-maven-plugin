@@ -13,4 +13,9 @@ public final class TestUtils
     {
         Assert.assertEquals( expected, getPropertyValue( project, propertyName ) );
     }
+
+    public static void assertPropertyNotEquals( String expected, String propertyName, MavenProject project )
+    {
+        Assert.assertNotEquals( expected, getPropertyValue( project, propertyName ) );
+    }
 }

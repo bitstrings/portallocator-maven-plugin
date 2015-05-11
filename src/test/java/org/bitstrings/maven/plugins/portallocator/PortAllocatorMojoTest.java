@@ -6,16 +6,29 @@ import static org.bitstrings.maven.plugins.portallocator.util.TestUtils.*;
 import org.apache.maven.project.MavenProject;
 import org.junit.Test;
 
-public class PortsFullFormTest
+public class PortAllocatorMojoTest
     extends AbstractPortAllocatorTest
 {
+    @Test
+    public void portsCompactForm()
+        throws Exception
+    {
+        new PortAllocatorServiceMock();
+
+        MavenProject project = createNewMavenProject();
+
+        rule.executeMojo( project, "allocate", domFromString( "<ports>compact</ports>" ) );
+
+        assertPropertyEquals( "8090", "compact.port", project );
+    }
+
     @Test
     public void portsFullForm()
         throws Exception
     {
         new PortAllocatorServiceMock();
 
-        MavenProject project = createBaseMavenProject();
+        MavenProject project = createNewMavenProject();
 
         rule.executeMojo(
                 project,

@@ -91,6 +91,8 @@ limitations under the License.
 
         <java.javadoc.version>2.10.1</java.javadoc.version>
 
+        <surefire.version>2.18.1</surefire.version>
+
         <maven.version>3.2.5</maven.version>
         <maven-plugin-plugin.version>3.4</maven-plugin-plugin.version>
         <maven-plugin-testing-harness.version>3.3.0</maven-plugin-testing-harness.version>
@@ -149,10 +151,7 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <reuseForks>false</reuseForks>
-                </configuration>
+                <version>${surefire.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -251,12 +250,12 @@ limitations under the License.
 
     <profiles>
         <profile>
-            <id>it</id>
+            <id>itX</id>
 
             <activation>
                 <property>
                     <name>it.execute</name>
-                    <value>true</value>
+                    <value>XXX</value>
                 </property>
             </activation>
 

@@ -13,7 +13,7 @@ public class AbstractPortAllocatorTest
     @Rule
     public TestResources resources = new TestResources();
 
-    public MavenProject createBaseMavenProject()
+    public MavenProject createNewMavenProject()
         throws Exception
     {
         return rule.readMavenProject( resources.getBasedir( "base" ) );
