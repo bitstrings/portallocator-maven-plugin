@@ -10,7 +10,7 @@ public class PortAllocatorMojoTest
     extends AbstractPortAllocatorTest
 {
     @Test
-    public void portsCompactForm()
+    public void should_assignPort_when_usingCompactForm()
         throws Exception
     {
         MavenProject project = createNewMavenProject();
@@ -21,7 +21,7 @@ public class PortAllocatorMojoTest
     }
 
     @Test
-    public void portsFullForm()
+    public void should_assignPort_when_usingFullForm()
         throws Exception
     {
         MavenProject project = createNewMavenProject();
