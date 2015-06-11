@@ -13,8 +13,6 @@ public class PortAllocatorMojoTest
     public void portsCompactForm()
         throws Exception
     {
-        new PortAllocatorServiceMock();
-
         MavenProject project = createNewMavenProject();
 
         rule.executeMojo( project, "allocate", domFromString( "<ports>compact</ports>" ) );
@@ -26,8 +24,6 @@ public class PortAllocatorMojoTest
     public void portsFullForm()
         throws Exception
     {
-        new PortAllocatorServiceMock();
-
         MavenProject project = createNewMavenProject();
 
         rule.executeMojo(
