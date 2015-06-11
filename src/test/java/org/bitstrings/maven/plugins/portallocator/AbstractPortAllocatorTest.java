@@ -34,6 +34,7 @@ public class AbstractPortAllocatorTest
                 true )
         ).clear();
 
-        new PortAllocatorServiceMock();
+        //new ServerSocketMock();
+        //new PortAllocatorServiceMock();
     }
 }

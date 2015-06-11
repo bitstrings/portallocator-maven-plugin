@@ -10,7 +10,7 @@ public class PortAllocatorMojoTest
     extends AbstractPortAllocatorTest
 {
     @Test
-    public void should_assignPort_when_usingCompactForm()
+    public void should_assignPortDefaultPort_when_usingCompactFormAndNoPort()
         throws Exception
     {
         MavenProject project = createNewMavenProject();
@@ -21,7 +21,34 @@ public class PortAllocatorMojoTest
     }
 
     @Test
-    public void should_assignPort_when_usingFullForm()
+    public void should_assignPort_when_usingCompactFormAndPreferredPort()
+        throws Exception
+    {
+        MavenProject project = createNewMavenProject();
+
+        rule.executeMojo( project, "allocate", domFromString( "<ports>compact:8095</ports>" ) );
+
+        assertPropertyEquals( "8095", "compact.port", project );
+    }
+
+    @Test
+    public void should_assignMultiPort_when_usingCompactFormAndPreferredPort()
+        throws Exception
+    {
+        MavenProject project = createNewMavenProject();
+
+        rule.executeMojo(
+                project,
+                "allocate",
+                domFromString( "<ports>compact1:8095,compact2:9999,  compact3:8888 </ports>" ) );
+
+        assertPropertyEquals( "8095", "compact1.port", project );
+        assertPropertyEquals( "9999", "compact2.port", project );
+        assertPropertyEquals( "8888", "compact3.port", project );
+    }
+
+    @Test
+    public void should_assignPort_when_usingFullFormAndPreferredPort()
         throws Exception
     {
         MavenProject project = createNewMavenProject();
