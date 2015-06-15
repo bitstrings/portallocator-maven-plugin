@@ -4,8 +4,11 @@ import static org.bitstrings.maven.plugins.portallocator.util.MavenUtils.*;
 import static org.bitstrings.maven.plugins.portallocator.util.TestUtils.*;
 
 import org.apache.maven.project.MavenProject;
+import org.bitstrings.test.junit.ClassLoaderPerTestRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith( ClassLoaderPerTestRunner.class )
 public class PortAllocatorMojoTest
     extends AbstractPortAllocatorTest
 {
