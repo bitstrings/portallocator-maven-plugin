@@ -72,7 +72,7 @@ limitations under the License.
         <license>
             <name>Apache License Version 2.0, January 2004</name>
             <distribution>manual</distribution>
-            <url>https://raw.github.com/bitstrings/dependencypath-maven-plugin/master/LICENSE.txt</url>
+            <url>https://raw.github.com/bitstrings/portallocator-maven-plugin/master/LICENSE.txt</url>
             <comments>
                 http://www.apache.org/licenses/LICENSE-2.0.html
             </comments>
@@ -267,19 +267,6 @@ limitations under the License.
 
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.bitstrings.maven.plugins</groupId>
-                        <artifactId>dependencypath-maven-plugin</artifactId>
-                        <version>1.1.1</version>
-                        <executions>
-                            <execution>
-                                <id>set-all</id>
-                                <goals>
-                                    <goal>set</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
