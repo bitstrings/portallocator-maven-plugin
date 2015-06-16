@@ -13,6 +13,8 @@ public class AbstractPortAllocatorTest
     @Rule
     public TestResources resources = new TestResources();
 
+    protected PortAllocatorServiceMock portAllocatorServiceMock = new PortAllocatorServiceMock();
+
     public MavenProject createNewMavenProject()
         throws Exception
     {
