@@ -45,7 +45,7 @@ public final class TestUtils
         assertThat(
                 Integer.valueOf( getPropertyValue( project, propertyName ) ) )
             .is(
-                new Condition<Integer>()
+                new Condition<Integer>( "WHAT" )
                 {
                     @Override
                     public boolean matches( Integer value )

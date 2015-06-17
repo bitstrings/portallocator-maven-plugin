@@ -81,7 +81,7 @@ public class PortAllocatorMojoTest
     public void should_assignNextAvailablePort_when_usingPortUnavailable()
         throws Exception
     {
-        portAllocatorServiceMock.addPorts( new PortRange( 8090, 8099 ) );
+        portAllocatorServiceMock.addUnavailablePorts( new PortRange( 8090, 8099 ) );
 
         MavenProject project = createNewMavenProject();
 

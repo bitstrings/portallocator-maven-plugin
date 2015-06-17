@@ -19,10 +19,10 @@ public class PortAllocatorServiceMock
 
     public PortAllocatorServiceMock( PortRange... portRanges )
     {
-        addPorts( portRanges );
+        addUnavailablePorts( portRanges );
     }
 
-    public PortAllocatorServiceMock addPorts( PortRange... portRanges )
+    public PortAllocatorServiceMock addUnavailablePorts( PortRange... portRanges )
     {
         Collections.addAll( unavailablePorts, portRanges );
 
