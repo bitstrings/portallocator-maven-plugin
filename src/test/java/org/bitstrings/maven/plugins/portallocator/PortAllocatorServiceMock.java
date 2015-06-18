@@ -42,13 +42,9 @@ public class PortAllocatorServiceMock
         {
             if ( portRange.isInRange( port ) )
             {
-                System.out.println( "Port [" + port + "] and is unavailable." );
-
                 return false;
             }
         }
-
-        System.out.println( "Port [" + port + "] and is available." );
 
         return true;
     }
