@@ -76,17 +76,32 @@ public class Port
 
         if ( components.hasNext() )
         {
-            setPreferredPort( Integer.parseInt( components.next() ) );
+            String value = components.next();
+
+            if ( !value.isEmpty() )
+            {
+                setPreferredPort( Integer.parseInt( value ) );
+            }
         }
 
         if ( components.hasNext() )
         {
-            setOffsetFrom( components.next() );
+            String value = components.next();
+
+            if ( !value.isEmpty() )
+            {
+                setOffsetFrom( value );
+            }
         }
 
         if ( components.hasNext() )
         {
-            setSetOffsetProperty( BooleanUtils.toBoolean( components.next() ) );
+            String value = components.next();
+
+            if ( !value.isEmpty() )
+            {
+                setSetOffsetProperty( BooleanUtils.toBoolean( value ) );
+            }
         }
     }
 }
