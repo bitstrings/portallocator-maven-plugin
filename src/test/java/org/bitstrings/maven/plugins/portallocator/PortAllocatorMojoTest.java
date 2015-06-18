@@ -92,4 +92,53 @@ public class PortAllocatorMojoTest
 
         assertPropertyNotBetween( 8090, 8099, "next.port", project );
     }
+
+    @Test
+    public void should_assignOffset_when_usingCompactForm()
+        throws Exception
+    {
+        portAllocatorServiceMock.addUnavailablePorts( new PortRange( 8090, 8099 ) );
+
+        MavenProject project = createNewMavenProject();
+
+        rule.executeMojo( project, "allocate", domFromString( "<ports>compact:8090::true</ports>" ) );
+
+        assertPropertyEquals( "10", "compact.port-offset", project );
+    }
+
+    @Test
+    public void should_writePropertiesFile_when_usingWritePropertiesFileConfig()
+        throws Exception
+    {
+        portAllocatorServiceMock.addUnavailablePorts( new PortRange( 8090, 8095 ) );
+
+        MavenProject project = createNewMavenProject();
+
+        rule.executeMojo(
+            project,
+            "allocate",
+            domFromString(
+                "<ports>"
+                    + "<port>"
+                    + "<name>name1</name>"
+                    + "</port>"
+                    + "<port>"
+                    + "<name>name2</name>"
+                    + "<preferredPort>8096</preferredPort>"
+                    + "<setOffsetProperty>true</setOffsetProperty>"
+                    + "</port>"
+                    + "<port>"
+                    + "<name>name3</name>"
+                    + "<preferredPort>8090</preferredPort>"
+                    + "<offsetFrom>name2</offsetFrom>"
+                    + "</port>"
+                    + "<port>"
+                    + "<name>name4</name>"
+                    + "<preferredPort>8100</preferredPort>"
+                    + "<offsetFrom>name2</offsetFrom>"
+                    + "</port>"
+                    + "</ports>"
+            )
+        );
+    }
 }
