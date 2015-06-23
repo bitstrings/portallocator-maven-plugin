@@ -107,7 +107,7 @@ public class PortAllocatorMojoTest
     }
 
     @Test
-    public void should_writePropertiesFile_when_usingWritePropertiesFileConfig()
+    public void should_assignRelativePort_when_usingOffsetFrom()
         throws Exception
     {
         portAllocatorServiceMock.addUnavailablePorts( new PortRange( 8090, 8095 ) );
