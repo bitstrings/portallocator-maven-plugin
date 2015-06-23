@@ -13,6 +13,19 @@ public class PortAllocatorMojoTest
     extends AbstractPortAllocatorTest
 {
     @Test
+    public void should_changeNameSeparator_when_usingNameSeparator()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<nameSeparator>-</nameSeparator>",
+                "<ports>port</ports>"
+            );
+
+        assertPropertyEquals( "8090", "port-port", project );
+    }
+
+    @Test
     public void should_changePortSuffix_when_usingPortNameSuffix()
         throws Exception
     {
