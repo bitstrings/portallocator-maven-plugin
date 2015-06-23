@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,7 +45,9 @@ import org.apache.maven.project.MavenProject;
 import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 
 @Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresProject = true, requiresOnline = false )
@@ -157,39 +158,45 @@ public class PortAllocatorMojo
 
                 for ( Port port : ports )
                 {
-                    portGroupMap.put( port.getName(), port );
+                    final String offsetFrom = port.getOffsetFrom();
+                    final String portGroupName = findGroupRoot( port, portGroupMap );
 
-                    if ( port.getOffsetFrom() != null )
+                    portGroupMap.put( portGroupName, port );
+
+                    if ( offsetFrom != null )
                     {
-                        portGroupMap.put( port.getOffsetFrom(), port );
-                    }
-                }
-
-                while ( !portGroupMap.isEmpty() )
-                {
-                    portGroupMap.entries().listIterator();
-
-                    for (
-                        Iterator<Map.Entry<String, Collection<Port>>> iter = portGroupMap.asMap().entrySet().iterator();
-                        iter.hasNext(); )
-                    {
-                        final Map.Entry<String, Collection<Port>> entry = iter.next();
-
-                        boolean groupSuccess = true;
-                        for ( Port port : entry.getValue() )
+                        Integer fromParent = executionPortMap.get( getPortName( portGroupName ) );
+                        if ( fromParent == null )
                         {
-                            if ( !allocatePort( pas, port ) )
+                            throw new MojoExecutionException(
+                                "Port [" + port.getName() + "] using offset from undefined [" + offsetFrom + "]." );
+                        }
+
+                        portGroupMap.put( offsetFrom, port );
+                    }
+
+                    Iterator<Port> portIterator = Iterators.singletonIterator( port );
+
+                    while ( portIterator.hasNext() )
+                    {
+                        final Port portToAllocate = portIterator.next();
+
+                        ALLOCATION_LOCK.lock();
+
+                        ALLOCATED_PORTS.remove( executionPortMap.remove( getPortName( portToAllocate.getName() ) ) );
+                        ALLOCATED_PORTS.remove( executionPortMap.remove( getOffsetName( portToAllocate.getName() ) ) );
+
+                        ALLOCATION_LOCK.unlock();
+
+                        if ( !allocatePort( pas, portToAllocate ) )
+                        {
+                            if ( offsetFrom != null )
                             {
-                                groupSuccess = false;
-                                break;
+                                portIterator = portGroupMap.get( portGroupName ).listIterator();
                             }
                         }
-
-                        if ( groupSuccess )
-                        {
-                            iter.remove();
-                        }
                     }
+
                 }
             }
 
@@ -388,7 +395,7 @@ public class PortAllocatorMojo
         {
             if ( portConfig.getPreferredPort() == null )
             {
-                throw new MojoExecutionException( "'preferredPort' must be set when 'setOffsetProperty=true'." );
+                throw new MojoExecutionException( "'preferredPort' must be set when 'setOffsetProperty = true'." );
             }
 
             final String offsetPropertyName = getOffsetName( portNamePrefix );
@@ -407,6 +414,19 @@ public class PortAllocatorMojo
         }
 
         return true;
+    }
+
+    protected String findGroupRoot( Port port, ListMultimap<String, Port> portGroupMap )
+    {
+        while (
+            ( port != null )
+                && ( port.getOffsetFrom() != null )
+                && portGroupMap.containsKey( port.getOffsetFrom() ) )
+        {
+            port = portGroupMap.get( port.getOffsetFrom() ).get( 0 );
+        }
+
+        return port.getName();
     }
 
     protected String getPortName( String prefix )
