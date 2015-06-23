@@ -18,6 +18,7 @@ package org.bitstrings.maven.plugins.portallocator;
 
 import static com.google.common.base.MoreObjects.*;
 import static java.util.Collections.*;
+import static org.apache.commons.lang3.BooleanUtils.*;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
 
 import java.io.BufferedWriter;
@@ -33,7 +34,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -154,6 +154,7 @@ public class PortAllocatorMojo
                         "Cannot find port allocator [" + ports.getPortAllocatorRef() + "]" );
                 }
 
+                // assign
                 final LinkedListMultimap<String, Port> portGroupMap = LinkedListMultimap.create();
 
                 for ( Port port : ports )
@@ -196,7 +197,32 @@ public class PortAllocatorMojo
                             }
                         }
                     }
+                }
 
+                // log ports
+                for ( Port port : ports )
+                {
+                    if ( !quiet && getLog().isInfoEnabled() )
+                    {
+                        String name = getPortName( port.getName() );
+                        Integer value = executionPortMap.get( name );
+
+                        if ( value != null )
+                        {
+                            getLog().info( "Assigning port [" + value + "] to property [" +  name + "]" );
+                        }
+
+                        name = getOffsetName( port.getName() );
+                        value = executionPortMap.get( name );
+
+                        if ( value != null )
+                        {
+                            getLog().info(
+                                    "Assigning offset [" + value + "] "
+                                        + "using preferred port [" + port.getPreferredPort() + "] "
+                                        + "to property [" +  name + "]" );
+                        }
+                    }
                 }
             }
 
@@ -386,12 +412,7 @@ public class PortAllocatorMojo
         mavenProject.getProperties().put( portPropertyName, String.valueOf( allocatedPort ) );
         executionPortMap.put( portPropertyName, allocatedPort );
 
-        if ( !quiet && getLog().isInfoEnabled() )
-        {
-            getLog().info( "Assigning port [" + allocatedPort + "] to property [" +  portPropertyName + "]" );
-        }
-
-        if ( BooleanUtils.isTrue( portConfig.getSetOffsetProperty() != null ) )
+        if ( isTrue( portConfig.getSetOffsetProperty() != null ) )
         {
             if ( portConfig.getPreferredPort() == null )
             {
@@ -403,14 +424,6 @@ public class PortAllocatorMojo
 
             mavenProject.getProperties().put( offsetPropertyName, String.valueOf( offset ) );
             executionPortMap.put( offsetPropertyName, offset );
-
-            if ( !quiet && getLog().isInfoEnabled() )
-            {
-                getLog().info(
-                        "Assigning offset [" + offset + "] "
-                            + "using preferred port [" + portConfig.getPreferredPort() + "] "
-                            + "to property [" +  offsetPropertyName + "]" );
-            }
         }
 
         return true;
