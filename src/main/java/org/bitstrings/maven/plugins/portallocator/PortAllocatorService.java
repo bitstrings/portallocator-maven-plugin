@@ -196,7 +196,7 @@ public class PortAllocatorService
         return overflowPermitted;
     }
 
-    public boolean isPortAvailable( int port )
+    public boolean usePort( int port )
         throws IOException
     {
         for ( Listener l : listeners )

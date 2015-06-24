@@ -164,16 +164,10 @@ public class PortAllocatorMojo
 
                     portGroupMap.put( portGroupName, port );
 
-                    if ( offsetFrom != null )
+                    if ( ( offsetFrom != null ) && !executionPortMap.containsKey( getPortName( portGroupName ) ) )
                     {
-                        Integer fromParent = executionPortMap.get( getPortName( portGroupName ) );
-                        if ( fromParent == null )
-                        {
-                            throw new MojoExecutionException(
-                                "Port [" + port.getName() + "] using offset from undefined [" + offsetFrom + "]." );
-                        }
-
-                        portGroupMap.put( offsetFrom, port );
+                        throw new MojoExecutionException(
+                            "Port [" + port.getName() + "] using offset from undefined [" + offsetFrom + "]." );
                     }
 
                     Iterator<Port> portIterator = Iterators.singletonIterator( port );
@@ -182,20 +176,20 @@ public class PortAllocatorMojo
                     {
                         final Port portToAllocate = portIterator.next();
 
-                        ALLOCATION_LOCK.lock();
-
-                        ALLOCATED_PORTS.remove( executionPortMap.remove( getPortName( portToAllocate.getName() ) ) );
-                        ALLOCATED_PORTS.remove( executionPortMap.remove( getOffsetName( portToAllocate.getName() ) ) );
-
-                        ALLOCATION_LOCK.unlock();
+                        final Integer previousPort = executionPortMap.remove( getPortName( portToAllocate.getName() ) );
+                        executionPortMap.remove( getOffsetName( portToAllocate.getName() ) );
 
                         if ( !allocatePort( pas, portToAllocate ) )
                         {
-                            if ( offsetFrom != null )
+                            if ( portToAllocate.getOffsetFrom() != null )
                             {
                                 portIterator = portGroupMap.get( portGroupName ).listIterator();
                             }
                         }
+
+                        ALLOCATION_LOCK.lock();
+                        ALLOCATED_PORTS.remove( previousPort );
+                        ALLOCATION_LOCK.unlock();
                     }
                 }
 
@@ -391,7 +385,7 @@ public class PortAllocatorMojo
 
             allocatedPort = ( portConfig.getPreferredPort() + fromOffset );
 
-            if ( !pas.isPortAvailable( allocatedPort ) )
+            if ( !pas.usePort( allocatedPort ) )
             {
                 return false;
             }
@@ -399,7 +393,7 @@ public class PortAllocatorMojo
         else
         {
             allocatedPort =
-                ( ( portConfig.getPreferredPort() != null ) && pas.isPortAvailable( portConfig.getPreferredPort() ) )
+                ( ( portConfig.getPreferredPort() != null ) && pas.usePort( portConfig.getPreferredPort() ) )
                         ? portConfig.getPreferredPort()
                         : pas.nextAvailablePort();
 

@@ -154,6 +154,7 @@ limitations under the License.
                 <version>${surefire.version}</version>
                 <configuration>
                     <argLine>-Xmx256m -XX:MaxPermSize=386m</argLine>
+                    <detail>true</detail>
                 </configuration>
             </plugin>
         </plugins>
