@@ -88,6 +88,7 @@ public class PortAllocatorMojo
     private static final String OFFSET_NAME_SUFFIX_DEFAULT = "port-offset";
     private static final String NAME_SEPARATOR_DEFAULT = ".";
     private static final String PORT_ALLOCATOR_DEFAULT_ID = "default";
+    private static final String DEPLETED_ACTION_DEFAULT = "CONTINUE";
 
     private static final Set<Integer> ALLOCATED_PORTS = synchronizedSet( new HashSet<Integer>() );
     private static final Map<String, PortAllocatorService>
@@ -312,7 +313,7 @@ public class PortAllocatorMojo
     {
         if ( portAllocator.getDepletedAction() == null )
         {
-            portAllocator.setDepletedAction( PortAllocator.DepletedAction.CONTINUE );
+            portAllocator.setDepletedAction( DEPLETED_ACTION_DEFAULT );
         }
 
         if ( portAllocator.getPreferredPorts() == null )

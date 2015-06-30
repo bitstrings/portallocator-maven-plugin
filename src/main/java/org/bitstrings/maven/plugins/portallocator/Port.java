@@ -76,7 +76,7 @@ public class Port
 
         if ( components.hasNext() )
         {
-            String value = components.next();
+            final String value = components.next();
 
             if ( !value.isEmpty() )
             {
@@ -86,7 +86,7 @@ public class Port
 
         if ( components.hasNext() )
         {
-            String value = components.next();
+            final String value = components.next();
 
             if ( !value.isEmpty() )
             {
@@ -96,7 +96,7 @@ public class Port
 
         if ( components.hasNext() )
         {
-            String value = components.next();
+            final String value = components.next();
 
             if ( !value.isEmpty() )
             {

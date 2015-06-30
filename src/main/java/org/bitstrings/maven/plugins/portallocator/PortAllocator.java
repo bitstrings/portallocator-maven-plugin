@@ -16,8 +16,11 @@
  */
 package org.bitstrings.maven.plugins.portallocator;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 public class PortAllocator
 {
@@ -76,9 +79,9 @@ public class PortAllocator
         return depletedAction;
     }
 
-    public void setDepletedAction( DepletedAction depletedAction )
+    public void setDepletedAction( String depletedAction )
     {
-        this.depletedAction = depletedAction;
+        this.depletedAction = DepletedAction.valueOf( depletedAction.toUpperCase() );
     }
 
     public boolean isPermitOverride()
@@ -93,10 +96,34 @@ public class PortAllocator
 
     public void set( String preferredPortsStr )
     {
-        final PreferredPorts preferredPorts = new PreferredPorts();
+        final Iterator<String> components = Helpers.iterateOnSplit( preferredPortsStr, ":", false ).iterator();
 
-        preferredPorts.addPorts( preferredPortsStr );
+        if ( components.hasNext() )
+        {
+            final String value = components.next();
 
-        setPreferredPorts( preferredPorts );
+            if ( components.hasNext() )
+            {
+                setId( value );
+            }
+            else
+            {
+                final PreferredPorts preferredPorts = new PreferredPorts();
+                preferredPorts.addPorts( value );
+                setPreferredPorts( preferredPorts );
+            }
+        }
+
+        if ( components.hasNext() )
+        {
+            final PreferredPorts preferredPorts = new PreferredPorts();
+            preferredPorts.addPorts( components.next() );
+            setPreferredPorts( preferredPorts );
+        }
+
+        if ( components.hasNext() )
+        {
+            setDepletedAction( components.next() );
+        }
     }
 }
