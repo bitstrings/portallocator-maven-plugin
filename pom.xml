@@ -266,12 +266,11 @@ limitations under the License.
 
     <profiles>
         <profile>
-            <id>itX</id>
+            <id>it</id>
 
             <activation>
                 <property>
                     <name>it.execute</name>
-                    <value>XXX</value>
                 </property>
             </activation>
 
@@ -298,10 +297,10 @@ limitations under the License.
                                     <addTestClassPath>true</addTestClassPath>
                                     <streamLogs>true</streamLogs>
                                     <goals>
-                                        <goal>validate</goal>
+                                        <goal>verify</goal>
                                     </goals>
                                     <pomIncludes>
-                                        <pomInclude>**/pom.xml</pomInclude>
+                                        <pomInclude>*/pom.xml</pomInclude>
                                     </pomIncludes>
                                     <pomExcludes>
                                         <pomExclude>pom.xml</pomExclude>
