@@ -277,6 +277,28 @@ limitations under the License.
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.bitstrings.maven.plugins</groupId>
+                        <artifactId>dependencypath-maven-plugin</artifactId>
+                        <version>1.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>set-props</id>
+                                <goals>
+                                    <goal>set</goal>
+                                </goals>
+                                <configuration>
+                                    <propertySets>
+                                        <propertySet>
+                                            <includes>
+                                                <include>org.jmockit:jmockit:jar</include>
+                                            </includes>
+                                        </propertySet>
+                                    </propertySets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
                         <version>1.10</version>
@@ -296,6 +318,8 @@ limitations under the License.
                                     <settingsFile>src/it/settings.xml</settingsFile>
                                     <addTestClassPath>true</addTestClassPath>
                                     <streamLogs>true</streamLogs>
+                                    <addTestClassPath>true</addTestClassPath>
+                                    <mavenOpts>-javaagent:${org.jmockit:jmockit:jar} -Xbootclasspath/a:${org.jmockit:jmockit:jar}:${project.build.testOutputDirectory} -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=java.net.ServerSocket</mavenOpts>
                                     <goals>
                                         <goal>verify</goal>
                                     </goals>
