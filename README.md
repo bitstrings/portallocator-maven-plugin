@@ -63,18 +63,15 @@ Goal `allocate`
 
 
 #### Short form port definition
-
 ```
 {name}:{preferredPort}:{offsetFrom}:{setOffsetProperty}
 ```
 
-
 #### Short form port allocator definition
-
 ```
 {id}:{preferredPorts}:{depletedAction}
 ```
-
+Where `id` is optional, which case **default** is used.
 
 Example - Plugin execution
 --------------------------
