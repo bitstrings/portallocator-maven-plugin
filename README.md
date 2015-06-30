@@ -62,12 +62,17 @@ Goal `allocate`
 | setOffsetProperty | Boolean | 2.0 | If `true` this will set the port offset property.<br/>**Default:** `false` |
 
 
-#### Alternative port definition
-
-You may use this alternative syntax to define a port:
+#### Short form port definition
 
 ```
 {name}:{preferredPort}:{offsetFrom}:{setOffsetProperty}
+```
+
+
+#### Short form port allocator definition
+
+```
+{id}:{preferredPorts}:{depletedAction}
 ```
 
 
