@@ -38,7 +38,7 @@ public final class TestUtils
         final int actual = Integer.valueOf( getPropertyValue( project, propertyName ) );
 
         assertTrue(
-                "Must be between " + from + " and " + to + ".",
+                "Actual <" + actual + "> must be between <" + from + "> and <" + to + ">.",
                 ( actual >= from ) && ( actual <= to ) );
     }
 
@@ -48,7 +48,7 @@ public final class TestUtils
         final int actual = Integer.valueOf( getPropertyValue( project, propertyName ) );
 
         assertTrue(
-                "Must not be between " + from + " and " + to + ".",
+                "Actual <" + actual + "> must not be between <" + from + "> and <" + to + ">.",
                 ( actual < from ) || ( actual > to ) );
     }
 
@@ -59,7 +59,7 @@ public final class TestUtils
         for ( Map.Entry<String, String> expectedEntry : expected.entrySet() )
         {
             assertTrue(
-                "Expected property " + expectedEntry.getKey() + " not found.",
+                "Expected property <" + expectedEntry.getKey() + "> not found.",
                 actual.containsKey( expectedEntry.getKey() ) );
 
             assertEquals( expectedEntry.getValue(), actual.getProperty( expectedEntry.getKey() ) );
