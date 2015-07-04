@@ -16,11 +16,11 @@
  */
 package org.bitstrings.maven.plugins.portallocator;
 
+import static org.bitstrings.maven.plugins.portallocator.util.Helpers.*;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 public class PortAllocator
 {
@@ -33,9 +33,12 @@ public class PortAllocator
             portsList.add( ports );
         }
 
-        public void set( String ports )
+        public void set( String portsStr )
         {
-            portsList.add( ports );
+            for ( String ports : iterateOnSplit( portsStr, ";" ) )
+            {
+                portsList.add( ports );
+            }
         }
 
         public List<String> getPortsList()
@@ -96,12 +99,12 @@ public class PortAllocator
 
     public void set( String preferredPortsStr )
     {
-        final Iterator<String> components = Helpers.iterateOnSplit( preferredPortsStr, ":", false ).iterator();
+        final Iterator<String> components = iterateOnSplit( preferredPortsStr, ":", false ).iterator();
 
         if ( components.hasNext() )
         {
             final PreferredPorts preferredPorts = new PreferredPorts();
-            preferredPorts.addPorts( components.next() );
+            preferredPorts.set( components.next() );
             setPreferredPorts( preferredPorts );
         }
 
