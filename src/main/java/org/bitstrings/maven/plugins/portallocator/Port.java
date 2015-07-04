@@ -16,10 +16,11 @@
  */
 package org.bitstrings.maven.plugins.portallocator;
 
+import static org.bitstrings.maven.plugins.portallocator.util.Helpers.*;
+
 import java.util.Iterator;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.bitstrings.maven.plugins.portallocator.util.Helpers;
 
 public class Port
 {
@@ -70,7 +71,7 @@ public class Port
 
     public void set( String portExpr )
     {
-        final Iterator<String> components = Helpers.iterateOnSplit( portExpr, ":", false ).iterator();
+        final Iterator<String> components = iterateOnSplit( portExpr, ":", false ).iterator();
 
         setName( components.next() );
 
