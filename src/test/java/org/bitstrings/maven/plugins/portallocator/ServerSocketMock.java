@@ -11,9 +11,6 @@ public class ServerSocketMock
     @Mock
     public void $init( int port )
     {
-        System.out.println();
-        System.out.println( "MOCKING... port: " + port );
-        System.out.println();
     }
 
     @Mock
