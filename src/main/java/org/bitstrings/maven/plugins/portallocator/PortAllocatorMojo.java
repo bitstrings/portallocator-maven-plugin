@@ -104,7 +104,8 @@ public class PortAllocatorMojo
     {
         PORT_ALLOCATOR_SERVICE_MAP.put(
                 PORT_ALLOCATOR_DEFAULT_ID,
-                PORT_ALLOCATOR_SERVICE_DEFAULT = createPortAllocatorService( new PortAllocator() ) );
+                PORT_ALLOCATOR_SERVICE_DEFAULT
+                    = createPortAllocatorService( initPortAllocator( new PortAllocator() ) ) );
     }
 
     @Override
@@ -310,7 +311,7 @@ public class PortAllocatorMojo
         return pasBuilder.build();
     }
 
-    protected static void initPortAllocator( PortAllocator portAllocator )
+    protected static PortAllocator initPortAllocator( PortAllocator portAllocator )
     {
         if ( portAllocator.getDepletedAction() == null )
         {
@@ -331,6 +332,8 @@ public class PortAllocatorMojo
         {
             portAllocator.setId( PORT_ALLOCATOR_DEFAULT_ID );
         }
+
+        return portAllocator;
     }
 
     protected static void addPortRanges( PortAllocatorService.Builder builder, String portsCsv )
