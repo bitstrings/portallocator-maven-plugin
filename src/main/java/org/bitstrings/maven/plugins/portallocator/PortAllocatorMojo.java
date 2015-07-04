@@ -17,6 +17,7 @@
 package org.bitstrings.maven.plugins.portallocator;
 
 import static com.google.common.base.MoreObjects.*;
+import static com.google.common.base.Strings.*;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.BooleanUtils.*;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.*;
@@ -116,7 +117,7 @@ public class PortAllocatorMojo
             {
                 for ( PortAllocator portAllocator : portAllocators )
                 {
-                    final PortAllocatorService pas = createPortAllocatorService( portAllocator );
+                    initPortAllocator( portAllocator );
 
                     final PortAllocatorService existingPas = PORT_ALLOCATOR_SERVICE_MAP.get( portAllocator.getId() );
 
@@ -125,7 +126,9 @@ public class PortAllocatorMojo
                             || ( portAllocator.getId().equals( PORT_ALLOCATOR_DEFAULT_ID )
                                     && ( existingPas == PORT_ALLOCATOR_SERVICE_DEFAULT ) ) )
                     {
-                        PORT_ALLOCATOR_SERVICE_MAP.put( portAllocator.getId(), pas );
+                        PORT_ALLOCATOR_SERVICE_MAP.put(
+                                    portAllocator.getId(),
+                                    createPortAllocatorService( portAllocator ) );
 
                         if ( !quiet && getLog().isInfoEnabled() )
                         {
@@ -271,8 +274,6 @@ public class PortAllocatorMojo
 
     protected static PortAllocatorService createPortAllocatorService( PortAllocator portAllocator )
     {
-        initPortAllocator( portAllocator );
-
         final PortAllocatorService.Builder pasBuilder = new PortAllocatorService.Builder();
 
         if ( portAllocator.getDepletedAction() == PortAllocator.DepletedAction.CONTINUE )
@@ -326,7 +327,7 @@ public class PortAllocatorMojo
             portAllocator.getPreferredPorts().addPorts( PREFERRED_PORTS_DEFAULT );
         }
 
-        if ( portAllocator.getId() == null )
+        if ( isNullOrEmpty( portAllocator.getId() ) )
         {
             portAllocator.setId( PORT_ALLOCATOR_DEFAULT_ID );
         }
