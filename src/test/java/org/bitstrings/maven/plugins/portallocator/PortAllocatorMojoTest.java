@@ -282,6 +282,36 @@ public class PortAllocatorMojoTest
         );
     }
 
+    @Test
+    public void should_allocatePortsInRange_when_usingCustomPortAllocator()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<portAllocators>"
+                    + "<portAllocator>"
+                    + "<id>custom</id>"
+                    + "<preferredPorts>7777-7778,8000</preferredPorts>"
+                    + "</portAllocator>"
+                    + "</portAllocators>",
+                "<ports>"
+                    + "<portAllocatorRef>custom</portAllocatorRef>"
+                    + "<port>name1</port>"
+                    + "<port>name2</port>"
+                    + "<port>name3</port>"
+                    + "</ports>"
+            );
+
+        assertPropertiesEquals(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "7777" )
+                .put( "name2.port", "7778" )
+                .put( "name3.port", "8000" )
+                .build(),
+            project
+        );
+    }
+
     @Test( expected = MojoExecutionException.class )
     public void should_failIfNeedMorePortsThanAvailable_when_portAllocatorIsBounded()
         throws Exception
