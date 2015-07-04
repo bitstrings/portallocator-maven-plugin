@@ -32,6 +32,12 @@ public class PortAllocators
         portAllocatorList.add( portAllocator );
     }
 
+    @Override
+    public Iterator<PortAllocator> iterator()
+    {
+        return portAllocatorList.iterator();
+    }
+
     public void set( String portAllocatorsStr )
     {
         for ( String portAllocatorStr : Helpers.iterateOnCsv( portAllocatorsStr ) )
@@ -42,11 +48,5 @@ public class PortAllocators
 
             addPortAllocator( portAllocator );
         }
-    }
-
-    @Override
-    public Iterator<PortAllocator> iterator()
-    {
-        return portAllocatorList.iterator();
     }
 }

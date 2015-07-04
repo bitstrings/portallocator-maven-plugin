@@ -46,6 +46,7 @@ limitations under the License.
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
+                            <portAllocators>6000-6100</portAllocators>
                             <ports>portB</ports>
                         </configuration>
                     </execution>

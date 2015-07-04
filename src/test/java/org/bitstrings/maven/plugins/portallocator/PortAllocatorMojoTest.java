@@ -9,17 +9,20 @@ import java.io.Reader;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.bitstrings.maven.plugins.portallocator.PortAllocatorService.PortRange;
 import org.bitstrings.test.junit.runner.ClassLoaderPerTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.google.common.collect.ImmutableMap;
+
 @RunWith( ClassLoaderPerTestRunner.class )
 public class PortAllocatorMojoTest
     extends AbstractPortAllocatorTest
 {
-    private static final String PORTS_OFFSETFROM =
+    private static final String PORTS_OFFSETFROM_XML =
         "<ports>"
             + "<port>"
             + "<name>name1</name>"
@@ -101,9 +104,14 @@ public class PortAllocatorMojoTest
                 "<ports>compact1:8095,compact2:9999,  compact3:8888 </ports>"
             );
 
-        assertPropertyEquals( "8095", "compact1.port", project );
-        assertPropertyEquals( "9999", "compact2.port", project );
-        assertPropertyEquals( "8888", "compact3.port", project );
+        assertPropertiesEquals(
+            ImmutableMap.<String, String> builder()
+                .put( "compact1.port", "8095" )
+                .put( "compact2.port", "9999" )
+                .put( "compact3.port", "8888" )
+                .build(),
+            project
+        );
     }
 
     @Test
@@ -123,8 +131,13 @@ public class PortAllocatorMojoTest
                         + "</ports>"
             );
 
-        assertPropertyEquals( "8090", "full.port", project );
-        assertPropertyEquals( "9191", "full-preferred.port", project );
+        assertPropertiesEquals(
+            ImmutableMap.<String, String> builder()
+                .put( "full.port", "8090" )
+                .put( "full-preferred.port", "9191" )
+                .build(),
+            project
+        );
     }
 
     @Test
@@ -181,12 +194,17 @@ public class PortAllocatorMojoTest
     {
         portAllocatorServiceMock.addUnavailablePorts( new PortRange( 8090, 8095 ) );
 
-        MavenProject project = executeMojo( PORTS_OFFSETFROM );
+        MavenProject project = executeMojo( PORTS_OFFSETFROM_XML );
 
-        assertPropertyEquals( "8096", "name1.port", project );
-        assertPropertyEquals( "8103", "name2.port", project );
-        assertPropertyEquals( "8097", "name3.port", project );
-        assertPropertyEquals( "8107", "name4.port", project );
+        assertPropertiesEquals(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "8096" )
+                .put( "name2.port", "8103" )
+                .put( "name3.port", "8097" )
+                .put( "name4.port", "8107" )
+                .build(),
+            project
+        );
     }
 
     @Test
@@ -197,7 +215,7 @@ public class PortAllocatorMojoTest
 
         MavenProject project =
             executeMojo(
-                PORTS_OFFSETFROM,
+                PORTS_OFFSETFROM_XML,
                 "<writePropertiesFile>" + testPropsFileName + "</writePropertiesFile>"
             );
 
@@ -213,5 +231,70 @@ public class PortAllocatorMojoTest
         }
 
         assertEquals( testProps, project.getProperties() );
+    }
+
+    @Test
+    public void should_allocatePortsInRange_when_usingPortAllocatorShortestForm()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<portAllocators>65000-65004::fail</portAllocators>",
+                "<ports>name1,name2,name3,name4,name5</ports>"
+
+            );
+
+        assertPropertiesEquals(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "65000" )
+                .put( "name2.port", "65001" )
+                .put( "name3.port", "65002" )
+                .put( "name4.port", "65003" )
+                .put( "name5.port", "65004" )
+                .build(),
+            project
+        );
+    }
+
+    @Test
+    public void should_allocatePortsInRange_when_usingMultiplePreferredPortsForSinglePortAllocator()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<portAllocators>65000-65001;5000-5002;9990-9992</portAllocators>",
+                "<ports>name1,name2,name3,name4,name5,name6,name7,name8</ports>"
+
+            );
+
+        assertPropertiesEquals(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "65000" )
+                .put( "name2.port", "65001" )
+                .put( "name3.port", "5000" )
+                .put( "name4.port", "5001" )
+                .put( "name5.port", "5002" )
+                .put( "name6.port", "9990" )
+                .put( "name7.port", "9991" )
+                .put( "name8.port", "9992" )
+                .build(),
+            project
+        );
+    }
+
+    @Test( expected = MojoExecutionException.class )
+    public void should_failIfNeedMorePortsThanAvailable_when_portAllocatorIsBounded()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<portAllocators>"
+                    + "<portAllocator>8011::fail</portAllocator>"
+                    + "</portAllocators>",
+                "<ports>name1,name2</ports>"
+
+            );
+
+        assertPropertyEquals( "8011", "name1.port", project );
     }
 }
