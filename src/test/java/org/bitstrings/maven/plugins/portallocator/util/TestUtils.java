@@ -1,11 +1,12 @@
 package org.bitstrings.maven.plugins.portallocator.util;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.bitstrings.maven.plugins.portallocator.util.MavenUtils.*;
 import static org.junit.Assert.*;
 
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.maven.project.MavenProject;
-import org.assertj.core.api.Condition;
 
 public final class TestUtils
 {
@@ -34,25 +35,34 @@ public final class TestUtils
     public static void assertPropertyBetween(
             int from, int to, String propertyName, MavenProject project )
     {
-        assertThat(
-                Integer.valueOf( getPropertyValue( project, propertyName ) ) )
-            .isBetween( from, to );
+        final int actual = Integer.valueOf( getPropertyValue( project, propertyName ) );
+
+        assertTrue(
+                "Must be between " + from + " and " + to + ".",
+                ( actual >= from ) && ( actual <= to ) );
     }
 
     public static void assertPropertyNotBetween(
             final int from, final int to, String propertyName, MavenProject project )
     {
-        assertThat(
-                Integer.valueOf( getPropertyValue( project, propertyName ) ) )
-            .is(
-                new Condition<Integer>( "WHAT" )
-                {
-                    @Override
-                    public boolean matches( Integer value )
-                    {
-                        return ( value < from || value > to );
-                    }
-                }
-            );
+        final int actual = Integer.valueOf( getPropertyValue( project, propertyName ) );
+
+        assertTrue(
+                "Must not be between " + from + " and " + to + ".",
+                ( actual < from ) || ( actual > to ) );
+    }
+
+    public static void assertPropertiesEquals( Map<String, String> expected, MavenProject project )
+    {
+        final Properties actual = project.getProperties();
+
+        for ( Map.Entry<String, String> expectedEntry : expected.entrySet() )
+        {
+            assertTrue(
+                "Expected property " + expectedEntry.getKey() + " not found.",
+                actual.containsKey( expectedEntry.getKey() ) );
+
+            assertEquals( expectedEntry.getValue(), actual.getProperty( expectedEntry.getKey() ) );
+        }
     }
 }
