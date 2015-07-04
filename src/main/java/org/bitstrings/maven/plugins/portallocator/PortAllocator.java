@@ -35,7 +35,7 @@ public class PortAllocator
 
         public void set( String portsStr )
         {
-            for ( String ports : iterateOnSplit( portsStr, ";" ) )
+            for ( String ports : iterateOnSplit( portsStr, "," ) )
             {
                 portsList.add( ports );
             }
@@ -104,7 +104,7 @@ public class PortAllocator
         if ( components.hasNext() )
         {
             final PreferredPorts preferredPorts = new PreferredPorts();
-            preferredPorts.set( components.next() );
+            preferredPorts.set( components.next().replace( ';', ',' ) );
             setPreferredPorts( preferredPorts );
         }
 
