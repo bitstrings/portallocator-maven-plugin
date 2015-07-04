@@ -221,7 +221,7 @@ public class PortAllocatorMojoTest
 
         final File testPropsFile = new File( project.getBasedir(), testPropsFileName );
 
-        assertTrue( "Port properties file doesn't exist [" + testPropsFile + "].", testPropsFile.exists() );
+        assertTrue( "Port properties file doesn't exist <" + testPropsFile + ">.", testPropsFile.exists() );
 
         Properties testProps = new Properties();
 
