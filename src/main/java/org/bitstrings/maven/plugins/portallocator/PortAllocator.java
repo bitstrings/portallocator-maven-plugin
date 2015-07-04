@@ -100,25 +100,14 @@ public class PortAllocator
 
         if ( components.hasNext() )
         {
-            final String value = components.next();
-
-            if ( components.hasNext() )
-            {
-                setId( value );
-            }
-            else
-            {
-                final PreferredPorts preferredPorts = new PreferredPorts();
-                preferredPorts.addPorts( value );
-                setPreferredPorts( preferredPorts );
-            }
+            final PreferredPorts preferredPorts = new PreferredPorts();
+            preferredPorts.addPorts( components.next() );
+            setPreferredPorts( preferredPorts );
         }
 
         if ( components.hasNext() )
         {
-            final PreferredPorts preferredPorts = new PreferredPorts();
-            preferredPorts.addPorts( components.next() );
-            setPreferredPorts( preferredPorts );
+            setId( components.next() );
         }
 
         if ( components.hasNext() )

@@ -69,9 +69,9 @@ Goal `allocate`
 
 #### Short form port allocator definition
 ```
-{id}:{preferredPorts}:{depletedAction}
+{preferredPorts}:{id}:{depletedAction}
 ```
-Where `id` is optional, which case **default** is used.
+If `id` is omitted, then `default` is used.
 
 Example - Plugin execution
 --------------------------
