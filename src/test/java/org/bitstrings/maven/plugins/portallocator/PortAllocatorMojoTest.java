@@ -104,7 +104,7 @@ public class PortAllocatorMojoTest
                 "<ports>compact1:8095,compact2:9999,  compact3:8888 </ports>"
             );
 
-        assertPropertiesEquals(
+        assertPropertiesContainsEntries(
             ImmutableMap.<String, String> builder()
                 .put( "compact1.port", "8095" )
                 .put( "compact2.port", "9999" )
@@ -131,7 +131,7 @@ public class PortAllocatorMojoTest
                         + "</ports>"
             );
 
-        assertPropertiesEquals(
+        assertPropertiesContainsEntries(
             ImmutableMap.<String, String> builder()
                 .put( "full.port", "8090" )
                 .put( "full-preferred.port", "9191" )
@@ -196,7 +196,7 @@ public class PortAllocatorMojoTest
 
         MavenProject project = executeMojo( PORTS_OFFSETFROM_XML );
 
-        assertPropertiesEquals(
+        assertPropertiesContainsEntries(
             ImmutableMap.<String, String> builder()
                 .put( "name1.port", "8096" )
                 .put( "name2.port", "8103" )
@@ -244,7 +244,7 @@ public class PortAllocatorMojoTest
 
             );
 
-        assertPropertiesEquals(
+        assertPropertiesContainsEntries(
             ImmutableMap.<String, String> builder()
                 .put( "name1.port", "65000" )
                 .put( "name2.port", "65001" )
@@ -267,7 +267,7 @@ public class PortAllocatorMojoTest
 
             );
 
-        assertPropertiesEquals(
+        assertPropertiesContainsEntries(
             ImmutableMap.<String, String> builder()
                 .put( "name1.port", "65000" )
                 .put( "name2.port", "65001" )
@@ -302,7 +302,7 @@ public class PortAllocatorMojoTest
                     + "</ports>"
             );
 
-        assertPropertiesEquals(
+        assertPropertiesContainsEntries(
             ImmutableMap.<String, String> builder()
                 .put( "name1.port", "7777" )
                 .put( "name2.port", "7778" )

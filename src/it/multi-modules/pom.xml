@@ -40,17 +40,6 @@ limitations under the License.
     </modules>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>@project.groupId@</groupId>
-                    <artifactId>@project.artifactId@</artifactId>
-                    <configuration>
-                        <writePropertiesFile>${project.build.outputDirectory}/ports.properties</writePropertiesFile>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>@project.groupId@</groupId>
@@ -61,7 +50,7 @@ limitations under the License.
                         <goals>
                             <goal>allocate</goal>
                         </goals>
-                        <configuration>
+                        <configuration combine.self="override">
                             <portAllocators>9000-9100</portAllocators>
                         </configuration>
                     </execution>

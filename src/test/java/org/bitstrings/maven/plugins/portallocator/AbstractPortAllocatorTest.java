@@ -1,6 +1,6 @@
 package org.bitstrings.maven.plugins.portallocator;
 
-import static org.bitstrings.maven.plugins.portallocator.util.MavenUtils.*;
+import static org.bitstrings.maven.plugins.portallocator.util.TestUtils.*;
 
 import org.apache.maven.plugin.testing.MojoRule;
 import org.apache.maven.plugin.testing.resources.TestResources;
