@@ -1,7 +1,6 @@
-import java.io.*;
-import java.nio.file.Files;
+import static org.bitstrings.maven.plugins.portallocator.util.TestUtils.*;
 
-import org.bitstrings.maven.plugins.portallocator.util.TestUtils;
+import java.io.*;
 
 File resultFile = new File( basedir, "target/ports.properties" );
 File expectedFile = new File( basedir, "expected.properties" );
@@ -18,4 +17,4 @@ expectedFile.withInputStream
     expected.load( it );
 }
 
-TestUtils.assertPropertiesContainsEntries( expected, result );
+assertPropertiesContainsEntries( expected, result );

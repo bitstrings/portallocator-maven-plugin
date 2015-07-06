@@ -41,12 +41,17 @@ limitations under the License.
                 <artifactId>@project.artifactId@</artifactId>
                 <executions>
                     <execution>
-                        <id>port-simplest-compact</id>
+                        <id>port-simplest-short</id>
                         <goals>
                             <goal>allocate</goal>
                         </goals>
                         <configuration>
-                            <ports>simplest</ports>
+                            <ports>
+                                <port>short</port>
+                                <port>
+                                    <name>full</name>
+                                </port>
+                            </ports>
                         </configuration>
                     </execution>
                 </executions>
