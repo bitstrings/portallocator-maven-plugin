@@ -8,6 +8,28 @@ portallocator-maven-plugin
 
 The port allocator plugin finds an available port and makes sure it is unique for the Maven execution.
 
+### Usage
+--------------------------
+```xml
+<plugin>
+    <groupId>org.bitstrings.maven.plugins</groupId>
+    <artifactId>portallocator-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>ports</id>
+            <goals>
+                <goal>allocate</goal>
+            </goals>
+            <configuration>
+                <ports>
+                    <port>tomcat-http</port>
+                </ports>
+            </configuration>
+        </execution>
+    <executions>
+</plugin>
+```
+
 Goal `allocate`
 ---------------
 
@@ -21,8 +43,8 @@ Goal `allocate`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
-| portAllocators | List | 2.0 | List of port allocators.<br/>**Short form:** `<portAllocators>ports1,ports2,...</portAllocators>` |
-| ports | Ports | 2.0 | List of ports.<br/>**Short form:** `<ports>name1,name2,...</ports>`|
+| portAllocators | List | 2.0 | List of port allocators.<br/>**Short form:** `<portAllocators>shortForm1,shortForm2,...</portAllocators>` |
+| ports | Ports | 2.0 | List of ports.<br/>**Short form:** `<ports>shortForm1,shortForm2,...</ports>`|
 | nameSeparator | String | 2.0 | The name level separator.<br/>**Default:** `.` |
 | portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port` |
 | offsetNameSuffix | String | 2.0 | The offset name suffix.<br/>**Default:** `port-offset` |
@@ -33,7 +55,7 @@ Goal `allocate`
 
 | name | type | Since | Description |
 | ---- | ---- | ----- | ----------- |
-| portAllocator | PortAllocator | 2.0 | Port allocator.<br/>**Short form:** `<portAllocator>ports</portAllocator>` |
+| portAllocator | PortAllocator | 2.0 | Port allocator.<br/>**Short form:** `<portAllocator>shortForm</portAllocator>` |
 
 #### Structure `portAllocator`
 
@@ -50,7 +72,7 @@ Goal `allocate`
 | ---- | ---- | ----- | ----------- |
 | portAllocatorRef | String | 2.0 | The port allocator `id` to use.<br/>**Default:** `default`<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
 | portAllocator | PortAllocator | 2.0 | Inner port allocator.<br/>*You may only use `portAllocatorRef` or `portAllocator` but not both.* |
-| port | Port | 2.0 | The port to assign.<br/>**Short form:** `<port>name</port>` |
+| port | Port | 2.0 | The port to assign.<br/>**Short form:** `<port>shortForm</port>` |
 
 #### Structure `port`
 
@@ -61,62 +83,16 @@ Goal `allocate`
 | offsetFrom | String | 2.0 | Use the offset from the specified port. |
 | setOffsetProperty | Boolean | 2.0 | If `true` this will set the port offset property.<br/>**Default:** `false` |
 
-
-#### Short form port definition
+#### Short form `port`
 ```
 {name}:{preferredPort}:{offsetFrom}:{setOffsetProperty}
 ```
 
-#### Short form port allocator definition
+#### Short form `portAllocator`
 ```
 {preferredPorts}:{id}:{depletedAction}
 ```
 If `id` is omitted, then `default` is used.
-
-Example - Plugin execution
---------------------------
-```xml
-<plugin>
-    <groupId>org.bitstrings.maven.plugins</groupId>
-    <artifactId>portallocator-maven-plugin</artifactId>
-    <executions>
-        <execution>
-            <id>port-allocation</id>
-            <goals>
-                <goal>allocate</goal>
-            </goals>
-            <configuration>
-                <ports>http,https,jndi</ports>
-            </configuration>
-        </execution>
-    <executions>
-</plugin>
-```
-
-or
-
-```xml
-<plugin>
-    <groupId>org.bitstrings.maven.plugins</groupId>
-    <artifactId>portallocator-maven-plugin</artifactId>
-    <executions>
-        <execution>
-            <id>port-allocation</id>
-            <goals>
-                <goal>allocate</goal>
-            </goals>
-            <configuration>
-                <ports>
-                    http,
-                    https,
-                    jndi
-                </ports>
-            </configuration>
-        </execution>
-    <executions>
-</plugin>
-```
-
 
 Example - Simplest way
 ----------------------
@@ -128,6 +104,14 @@ This is the simplest way you can assign a port. The default preferred port is 80
 ```xml
 <configuration>
     <ports>tomcat</ports>
+</configuration>
+```
+
+```xml
+<configuration>
+    <ports>
+        <port>tomcat</port>
+    </ports>
 </configuration>
 ```
 
@@ -152,8 +136,6 @@ tomcat.port = 8090
 Example - Preferred port
 ------------------------
 
-
-
 #### Short form
 
 ```xml
@@ -163,8 +145,6 @@ Example - Preferred port
     </ports>
 </configuration>
 ```
-
-or
 
 ```xml
 <configuration>
@@ -241,6 +221,25 @@ Example - Write the ports to a properties file
 
 Example - Register a port allocator
 -----------------------------------
+
+#### Short form
+
+```xml
+<configuration>
+    <portAllocators>9090</portAllocators>
+</configuration>
+```
+
+```xml
+<configuration>
+    <portAllocators>
+        <portAllocator>9090</portAllocators>
+    </portAllocators>
+</configuration>
+```
+
+#### Long form
+
 ```xml
 <configuration>
     <portAllocators>
@@ -248,14 +247,6 @@ Example - Register a port allocator
             <preferredPorts>9090</preferredPorts>
         </portAllocator>
     </portAllocators>
-</configuration>
-```
-
-#### Short form
-
-```xml
-<configuration>
-    <portAllocators>9090</portAllocators>
 </configuration>
 ```
 
