@@ -10,6 +10,7 @@ The port allocator plugin finds an available port and makes sure it is unique fo
 
 ### Usage
 --------------------------
+
 ```xml
 <plugin>
     <groupId>org.bitstrings.maven.plugins</groupId>
@@ -46,10 +47,10 @@ Goal `allocate`
 | portAllocators | List | 2.0 | List of port allocators.<br/>**Short form:** `<portAllocators>shortForm1,shortForm2,...</portAllocators>` |
 | ports | Ports | 2.0 | List of ports.<br/>**Short form:** `<ports>shortForm1,shortForm2,...</ports>`|
 | nameSeparator | String | 2.0 | The name level separator.<br/>**Default:** `.` |
-| portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port` |
-| offsetNameSuffix | String | 2.0 | The offset name suffix.<br/>**Default:** `port-offset` |
-| writePropertiesFile | File | 2.0 | The properties file. |
-| quiet | Boolean | 1.0 | Set to `true` for no output. |
+| portNameSuffix | String | 2.0 | The port name suffix.<br/>**Default:** `port`<br/>**Example:** `name.port` |
+| offsetNameSuffix | String | 2.0 | The offset name suffix.<br/>**Default:** `port-offset`<br/>**Example:** `name.port-offset` |
+| writePropertiesFile | File | 2.0 | Write ports properties file. |
+| quiet | Boolean | 1.0 | Set to `true` for no output.<br/>**Default:** `false` |
 
 #### Structure `portAllocators`
 
@@ -65,6 +66,11 @@ Goal `allocate`
 | preferredPorts | List | 2.0 | The preferred ports.<br/>**Default:** `8090` |
 | depletedAction | String | 2.0 | The action to take if preferred ports are depleted.<br/>**Values:** `continue` or `fail`<br/>**Default:** `continue`  |
 | permitOverride | Boolean | 2.0 | By default allocators can not be overridden.<br/>This is useful for multi-module projects.<br/>**Default:** `false` |
+
+##### `preferredPorts`
+| name | type | Since | Description |
+| ---- | ---- | ----- | ----------- |
+| ports | String | 2.0 | Allowed ports. |
 
 #### Structure `ports`
 
@@ -84,14 +90,17 @@ Goal `allocate`
 | setOffsetProperty | Boolean | 2.0 | If `true` this will set the port offset property.<br/>**Default:** `false` |
 
 #### Short form `port`
+
 ```
 {name}:{preferredPort}:{offsetFrom}:{setOffsetProperty}
 ```
 
 #### Short form `portAllocator`
+
 ```
 {preferredPorts}:{id}:{depletedAction}
 ```
+
 If `id` is omitted, then `default` is used.
 
 Example - Simplest way
