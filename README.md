@@ -189,8 +189,6 @@ Example - Write the ports to a properties file
 </configuration>
 ```
 
-#### Somewhat short form
-
 ```xml
 <configuration>
     <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
@@ -287,21 +285,27 @@ This allocator will try to assign ports from `8080` to `9090`, otherwise fail.
 Use the `pool-1` port allocator.
 
 
-Example -
+Examples
 -----------------------------------
+
 ```xml
 <configuration>
     <ports>
-        <port>
-            <name>wildfly-http</name>
-            <offsetBasePort>8080</offsetBasePort>
-        </port>
-        <port>
-            <name>wildfly-https</name>
-            <offsetBasePort>8443</offsetBasePort>
-            <offsetFrom>wildfly-http</offsetFrom>
-        </port>
-        <port>wildfly-jndi:8888:wildfly-http</port>
+        wildfly-http:8080::true,
+        wildfly-https:8443:wildfly-http,
+        wildfly-jndi:8888:wildfly-http,
+        hsqldb
+    </ports>
+</configuration>
+```
+
+```xml
+<configuration>
+    <ports>
+        <portAllocator>9090-</portAllocator>
+        <port>wildfly-http</port>
+        <port>wildfly-https</port>
+        <port>wildfly-jndi</port>
         <port>hsqldb</port>
     </ports>
 </configuration>
