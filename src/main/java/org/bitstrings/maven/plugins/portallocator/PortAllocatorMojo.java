@@ -151,7 +151,7 @@ public class PortAllocatorMojo
                     ports.getPortAllocator() == null
                             ? PORT_ALLOCATOR_SERVICE_MAP.get(
                                     firstNonNull( ports.getPortAllocatorRef(), PORT_ALLOCATOR_DEFAULT_ID ) )
-                            : createPortAllocatorService( ports.getPortAllocator() );
+                            : createPortAllocatorService( initPortAllocator( ports.getPortAllocator() ) );
 
                 if ( pas == null )
                 {
