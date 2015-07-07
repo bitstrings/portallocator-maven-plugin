@@ -311,10 +311,22 @@ Examples
 ```xml
 <configuration>
     <ports>
-        <portAllocator>9090-</portAllocator>
+        <portAllocator>9090</portAllocator>
         <port>wildfly-http</port>
         <port>wildfly-https</port>
         <port>wildfly-jndi</port>
+        <port>hsqldb</port>
+    </ports>
+</configuration>
+```
+
+```xml
+<configuration>
+    <portAllocators>8080;8085;9090:custom</portAllocators>
+    <ports>
+        <portAllocatorRef>custom</portAllocatorRef>
+        <port>http</port>
+        <port>https</port>
         <port>hsqldb</port>
     </ports>
 </configuration>

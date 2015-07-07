@@ -312,6 +312,56 @@ public class PortAllocatorMojoTest
         );
     }
 
+    @Test
+    public void should_allocatePortsInRange_when_usingInnerPortAllocator()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<ports>"
+                    + "<portAllocator>8000</portAllocator>"
+                    + "<port>name1</port>"
+                    + "<port>name2</port>"
+                    + "<port>name3</port>"
+                    + "</ports>"
+            );
+
+        assertPropertiesContainsEntries(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "8000" )
+                .put( "name2.port", "8001" )
+                .put( "name3.port", "8002" )
+                .build(),
+            project
+        );
+    }
+
+    @Test
+    public void should_allocatePortsFromMultiPreferred_when_usingInnerPortAllocator()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<ports>"
+                    + "<portAllocator>8000,8050,9000</portAllocator>"
+                    + "<port>name1</port>"
+                    + "<port>name2</port>"
+                    + "<port>name3</port>"
+                    + "<port>name4</port>"
+                    + "</ports>"
+            );
+
+        assertPropertiesContainsEntries(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "8000" )
+                .put( "name2.port", "8050" )
+                .put( "name3.port", "9000" )
+                .put( "name4.port", "9001" )
+                .build(),
+            project
+        );
+    }
+
     @Test( expected = MojoExecutionException.class )
     public void should_failIfNeedMorePortsThanAvailable_when_portAllocatorIsBounded()
         throws Exception
