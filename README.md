@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bitstrings/portallocator-maven-plugin.svg?branch=master)](https://travis-ci.org/bitstrings/portallocator-maven-plugin)
+
 | **NOTE:** There's is also a 1.x version of this plugin but it has a very different configuration. |
 |---------------------------------------------------------------------------------------------------|
 
