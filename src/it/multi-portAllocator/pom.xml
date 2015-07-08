@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Copyright (c) 2015 bitstrings.org - Pino Silvaggio
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.bitstrings.maven.plugins.portallocator.it</groupId>
+        <artifactId>portallocation-parent-it</artifactId>
+        <version>1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>portallocation-simplest-it</artifactId>
+
+    <packaging>jar</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>@project.artifactId@</artifactId>
+                <executions>
+                    <execution>
+                        <id>pools</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration combine.self="override">
+                            <portAllocators>8000-8003:pool1,9990;9992;9994:pool2,10100:pool3</portAllocators>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>allocate-pool1</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration combine.self="override">
+                            <writePropertiesFile>${project.build.outputDirectory}/allocate-pool1/ports.properties</writePropertiesFile>
+                            <ports>
+                                <portAllocatorRef>pool1</portAllocatorRef>
+                                <port>name1</port>
+                                <port>name2</port>
+                                <port>name3</port>
+                                <port>name4</port>
+                                <port>name5</port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>allocate-pool2</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration combine.self="override">
+                            <writePropertiesFile>${project.build.outputDirectory}/allocate-pool2/ports.properties</writePropertiesFile>
+                            <ports>
+                                <portAllocatorRef>pool2</portAllocatorRef>
+                                <port>name1</port>
+                                <port>name2</port>
+                                <port>name3</port>
+                                <port>name4</port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>allocate-pool3</id>
+                        <goals>
+                            <goal>allocate</goal>
+                        </goals>
+                        <configuration combine.self="override">
+                            <writePropertiesFile>${project.build.outputDirectory}/allocate-pool3/ports.properties</writePropertiesFile>
+                            <ports>
+                                <portAllocatorRef>pool3</portAllocatorRef>
+                                <port>name1</port>
+                                <port>name2</port>
+                            </ports>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

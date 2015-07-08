@@ -329,6 +329,31 @@ public class PortAllocatorMojoTest
     }
 
     @Test
+    public void should_allocatePortsInRange_when_usingCustomPortAllocatorShortForm()
+        throws Exception
+    {
+        MavenProject project =
+            executeMojo(
+                "<portAllocators>7777-7778;8000:custom</portAllocators>",
+                "<ports>"
+                    + "<portAllocatorRef>custom</portAllocatorRef>"
+                    + "<port>name1</port>"
+                    + "<port>name2</port>"
+                    + "<port>name3</port>"
+                    + "</ports>"
+            );
+
+        assertPropertiesContainsEntries(
+            ImmutableMap.<String, String> builder()
+                .put( "name1.port", "7777" )
+                .put( "name2.port", "7778" )
+                .put( "name3.port", "8000" )
+                .build(),
+            project
+        );
+    }
+
+    @Test
     public void should_allocatePortsInRange_when_usingInnerPortAllocator()
         throws Exception
     {

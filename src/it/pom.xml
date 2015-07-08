@@ -47,7 +47,7 @@ limitations under the License.
                     <artifactId>@project.artifactId@</artifactId>
                     <version>@project.version@</version>
                     <configuration>
-                        <writePropertiesFile>${project.build.directory}/ports.properties</writePropertiesFile>
+                        <writePropertiesFile>${project.build.outputDirectory}/ports.properties</writePropertiesFile>
                     </configuration>
                 </plugin>
             </plugins>
