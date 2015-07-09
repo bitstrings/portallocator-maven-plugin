@@ -30,9 +30,9 @@ basedir.eachDirRecurse(
 
     it.eachFileRecurse
     {
-        if ( it.isFile() && it.name.equals( "ports.properties" ) )
+        if ( it.isFile() && it.name.equals( "expected.properties" ) )
         {
-            verify( it, new File( it.parentFile, "expected.properties" ) );
+            verify( new File( it.parentFile, "ports.properties" ), it );
         }
     }
 })
