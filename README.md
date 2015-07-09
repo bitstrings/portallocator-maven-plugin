@@ -17,19 +17,17 @@ The port allocator plugin finds an available port and makes sure it is unique fo
 <plugin>
     <groupId>org.bitstrings.maven.plugins</groupId>
     <artifactId>portallocator-maven-plugin</artifactId>
-    <executions>
+    <configuration>
         <execution>
-            <id>ports</id>
+            <id>allocate</id>
             <goals>
                 <goal>allocate</goal>
             </goals>
             <configuration>
-                <ports>
-                    <port>tomcat-http</port>
-                </ports>
+                <ports>portName</ports>
             </configuration>
         </execution>
-    <executions>
+    </configuration>
 </plugin>
 ```
 
@@ -40,7 +38,7 @@ Goal `allocate`
 
 * Requires a Maven project to be executed.
 * The goal is thread-safe and supports parallel builds.
-* Binds by default to the lifecycle phase: validate.
+* Binds by default to the lifecycle phase: generate-test-resources.
 
 ### Configuration
 
@@ -332,4 +330,30 @@ Examples
         <port>hsqldb</port>
     </ports>
 </configuration>
+```
+
+```xml
+<executions>
+    <execution>
+        <id>allocators</id>
+        <goals>
+            <goal>allocate</goal>
+        </goals>
+        <configuration>
+            <portAllocators>9000-9100</portAllocators>
+        </configuration>
+    </execution>
+</executions>
+
+<executions>
+    <execution>
+        <id>allocate-ports</id>
+        <goals>
+            <goal>allocate</goal>
+        </goals>
+        <configuration>
+            <ports>portA,portB,portC</ports>
+        </configuration>
+    </execution>
+</executions>
 ```
