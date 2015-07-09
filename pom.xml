@@ -313,7 +313,7 @@ limitations under the License.
                                     <postBuildHookScript>Verify</postBuildHookScript>
                                     <mavenOpts>-javaagent:${org.jmockit:jmockit:jar} -Xbootclasspath/a:${org.jmockit:jmockit:jar}:${project.build.testOutputDirectory} -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=java.net.ServerSocket</mavenOpts>
                                     <goals>
-                                        <goal>process-test-resources</goal>
+                                        <goal>generate-test-resources</goal>
                                     </goals>
                                     <pomIncludes>
                                         <pomInclude>*/pom.xml</pomInclude>
