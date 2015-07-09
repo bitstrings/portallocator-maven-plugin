@@ -51,7 +51,13 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 
-@Mojo( name = "allocate", defaultPhase = VALIDATE, threadSafe = true, requiresProject = true, requiresOnline = false )
+@Mojo(
+        name = "allocate",
+        defaultPhase = GENERATE_TEST_RESOURCES,
+        threadSafe = true,
+        requiresProject = true,
+        requiresOnline = false
+)
 public class PortAllocatorMojo
     extends AbstractMojo
 {
