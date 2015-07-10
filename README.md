@@ -17,17 +17,15 @@ The port allocator plugin finds an available port and makes sure it is unique fo
 <plugin>
     <groupId>org.bitstrings.maven.plugins</groupId>
     <artifactId>portallocator-maven-plugin</artifactId>
-    <configuration>
-        <execution>
-            <id>allocate</id>
-            <goals>
-                <goal>allocate</goal>
-            </goals>
-            <configuration>
-                <ports>portName</ports>
-            </configuration>
-        </execution>
-    </configuration>
+    <execution>
+        <id>allocate</id>
+        <goals>
+            <goal>allocate</goal>
+        </goals>
+        <configuration>
+            <ports>portName</ports>
+        </configuration>
+    </execution>
 </plugin>
 ```
 
