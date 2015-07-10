@@ -335,17 +335,19 @@ Using `offsetFrom` forces the allocation the being the `preferredPort` + `offset
 
 i.e.:
 
+```
 if
     `name1.port = 8096` and `name1.port-offset = 0`
 then
     `name2.port = 8090`
+```
 
-
+```
 if
     `name1.port = 8100` and `name1.port-offset = 4`
 then
     `name2.port = 8094`
-
+```
 
 This can be useful with `wildfly` for example, because you can use an offset that is applied for all ports.
 
