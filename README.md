@@ -293,9 +293,55 @@ This allocator will try to assign ports from `8080` to `9090`, otherwise fail.
 
 Use the `pool-1` port allocator.
 
+### Register multiple port allocator
+
+```xml
+<configuration>
+    <portAllocators>
+        8080-8999;9090-9099::fail,
+        10000-10999;12000;12002;12004;13000:pool1,
+        11000-11100:pool2:fail
+    </portAllocators>
+</configuration>
+```
+
+1) Overrides `default` port allocator and fail if it can't allocate a port between 8080-8999 or 9090-9099.
+2) Create a new port allocator `pool1` with an availability range of 10000-10999 and a set of specific ports: 12000,12002,12004,13000.
+3) Create a new port allocator `pool2` and fail if it can't allocate a port between 11000-11100.
+
+**Notice:** When using the short form with `portAllocators` you enumerate preferred ports using `;`.
+
+Example - Port offset
+---------------------
+
+```xml
+<configuration>
+    <ports>
+        <port>
+            <name>name1</name>
+        </port>
+        <port>
+            <name>name2</name>"
+            <preferredPort>8096</preferredPort>
+            <setOffsetProperty>true</setOffsetProperty>
+        </port>
+        <port>
+            <name>name3</name>
+            <preferredPort>8090</preferredPort>
+            <offsetFrom>name2</offsetFrom>
+        </port>
+        <port>
+            <name>name4</name>
+            <preferredPort>8100</preferredPort>
+            <offsetFrom>name2</offsetFrom>
+        </port>
+    </ports>
+</configuration>
+```
+
 
 Examples
------------------------------------
+--------
 
 ```xml
 <configuration>
