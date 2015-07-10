@@ -318,26 +318,27 @@ Example - Port offset
 <configuration>
     <ports>
         <port>
-            <name>name1</name>
-        </port>
-        <port>
-            <name>name2</name>"
+            <name>name1</name>"
             <preferredPort>8096</preferredPort>
             <setOffsetProperty>true</setOffsetProperty>
         </port>
         <port>
-            <name>name3</name>
+            <name>name2</name>
             <preferredPort>8090</preferredPort>
-            <offsetFrom>name2</offsetFrom>
-        </port>
-        <port>
-            <name>name4</name>
-            <preferredPort>8100</preferredPort>
-            <offsetFrom>name2</offsetFrom>
+            <offsetFrom>name1</offsetFrom>
         </port>
     </ports>
 </configuration>
 ```
+
+Using `offsetFrom` forces the allocation the being the `preferredPort` + `offsetFrom`.
+
+i.e.:
+
+if `name1.port = 8096` and `name1.port-offset = 0` then `name2.port = 8090`
+if `name1.port = 8100` and `name1.port-offset = 4` then `name2.port = 8094`
+
+This can be useful with `wildfly` for example, because you can use an offset that is applied for all ports.
 
 
 Examples
