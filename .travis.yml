@@ -1,4 +1,4 @@
 language: java
-script: mvn -Dit.execute clean javadoc:javadoc site
+script: mvn -Dit.execute clean javadoc:javadoc install site
 jdk:
   - oraclejdk7
